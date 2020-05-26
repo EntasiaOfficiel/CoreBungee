@@ -1,0 +1,5 @@
+name: CoreBungee
+version: 1.0
+author: Stargeyt, iTrooz_
+main: fr.entasia.corebungee.Main
+depends: [Libraries, JDA, LuckPerms, AdvancedBan]
