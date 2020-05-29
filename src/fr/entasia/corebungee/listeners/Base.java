@@ -12,6 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.protocol.packet.Chat;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,21 +20,19 @@ import java.util.Date;
 
 public class Base implements Listener {
 
-	private String[] cmdcompletes = {"ctime","forcekick","ipcheck","join","msg","ping","whois"};
-
+	private final String[] cmdcompletes = {"ctime", "forcekick", "ipcheck", "join", "msg", "ping", "whois"};
 	@EventHandler
-	public void onChat(ChatEvent e) {
+	public void onChat(ChatEvent e){
 		if(e.getSender() instanceof ProxiedPlayer&&!e.isCommand()) {
 			ProxiedPlayer p = (ProxiedPlayer)e.getSender();
 			BungeePlayer bp = Main.getPlayer(p.getName());
 
 			if(e.getMessage().startsWith(".sync")) {
-				p.sendMessage("§cCette commande doit s'éxecuter sur discord ! Fait §4/discord§c pour avoir le lien");
+				p.sendMessage(ChatComponent.create("§cCette commande doit s'éxecuter sur discord ! Fait §4/discord§c pour avoir le lien"));
 				return;
 			}
 
-			if(new Date().getTime()-bp.lastsentmsg>450){
-				bp.lastsentmsg = new Date().getTime();
+			if(bp.sentSince()>450){
 				if (Main.staffchat.contains(p.getUniqueId())) {
 					if(p.hasPermission("staff.staffchat")){
 						e.setCancelled(true);
@@ -41,31 +40,47 @@ public class Base implements Listener {
 					}else{
 						Main.staffchat.remove(p.getUniqueId());
 					}
+					/*
+					1&&1 = 1
+					1&&0 = 0
+
+					!1 = 0
+
+					1||1 = 1
+					1||0 = 1
+					 */
 				}else{
-					if(e.getMessage().length()>3&&bp.lastmsg.equals(e.getMessage())){
-						p.sendMessage("§cNe spam pas !");
+					if(bp.lastmsg.equals(e.getMessage())&&bp.sentSince()<5000){
+						p.sendMessage(ChatComponent.create("§cNe spam pas !"));
 						e.setCancelled(true);
 					}else{
-						bp.lastmsg = e.getMessage();
-					}
-					int pe = 0;
-					int m = (int) (e.getMessage().length()*0.75);
-					for(char c : e.getMessage().toCharArray()){
-						if(c>=65&&c<=90){
-							pe++;
-							if(pe>m){
-								p.sendMessage("§cAttention à l'abus de majuscules dans ton message !");
-								e.setMessage(e.getMessage().toLowerCase());
-								break;
-							}
+						if(checkMajs(e.getMessage())){
+							p.sendMessage(ChatComponent.create("§cAttention à l'abus de majuscules dans ton message !"));
+							e.setMessage(e.getMessage().toLowerCase());
 						}
+
+						// on est good
+						bp.lastsentmsg = new Date().getTime();
+						bp.lastmsg = e.getMessage();
 					}
 				}
 			}else{
-				p.sendMessage("§cHép ! Attend un peu avant de d'envoyer de nouveau un message !");
+				p.sendMessage(ChatComponent.create("§cHép ! Attend un peu avant de d'envoyer de nouveau un message !"));
 				e.setCancelled(true);
 			}
 		}
+	}
+
+	public static boolean checkMajs(String msg){
+		int pe = 0;
+		int max = (int) (msg.length()*0.75);
+		for(char c : msg.toCharArray()){
+			if(c>=65&&c<=90){
+				pe++;
+				if(pe>max)return true;
+			}
+		}
+		return false;
 	}
 
 	@EventHandler(priority = 127)
@@ -135,7 +150,7 @@ public class Base implements Listener {
 
 		if(Main.lockdown!=null) {
 			if (bp.p.hasPermission("staff.lockdown.bypass")) {
-				bp.p.sendMessage("§6Lockdown » §7Lockdown bypass ! " + lreason("§8"));
+				bp.p.sendMessage(ChatComponent.create("§6Lockdown » §7Lockdown bypass ! " + lreason("§8")));
 			} else{
 				bp.p.disconnect(ChatComponent.create("§cLe serveur est en maintenance ! " + lreason("§7")));
 				return;
@@ -149,7 +164,7 @@ public class Base implements Listener {
 					bp.p.disconnect(ChatComponent.create("§cTu es déja en vanish ! Merci de te connecter via l'adresse play.entasia.fr"));
 					return;
 				}else{
-					bp.p.sendMessage("§3Vanish » §aActivé par DNS ! §b(Se désactivera à ta déconnexion");
+					bp.p.sendMessage(ChatComponent.create("§3Vanish » §aActivé par DNS ! §b(Se désactivera à ta déconnexion"));
 					Main.vanishs.put(bp.p.getName(), bp.p);
 					SocketClient.sendData("broadcast vanish 1 "+bp.p.getName());
 					Main.sqlConnection.fastUpdate("INSERT INTO global.vanishs (name) VALUES (?)", bp.p.getName());
@@ -160,7 +175,7 @@ public class Base implements Listener {
 				return;
 			}
 		}else if(Main.vanishs.containsKey(bp.p.getName())) {
-			bp.p.sendMessage("§3Vanish » §cRestauré !");
+			bp.p.sendMessage(ChatComponent.create("§3Vanish » §cRestauré !"));
 			vanishMsg(bp.p);
 		}else if(Main.joinquit)Main.main.getProxy().broadcast(ChatComponent.create("§aJoin §8»§7 " + Main.formatPlayer(bp.p) + "§7 a rejoint §bEnta§7sia !"));
 		bp.lastjointime = new Date().getTime();
