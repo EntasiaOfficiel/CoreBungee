@@ -5,6 +5,8 @@ import fr.entasia.corebungee.antibot.SQLUpdate;
 import fr.entasia.corebungee.commands.base.*;
 import fr.entasia.corebungee.commands.other.AntibotCmd;
 import fr.entasia.corebungee.commands.other.BotSyncCmd;
+import fr.entasia.corebungee.commands.troll.AdminCmd;
+import fr.entasia.corebungee.commands.troll.HeroCmd;
 import fr.entasia.corebungee.listeners.*;
 import fr.entasia.corebungee.listeners.SocketSpecials;
 import fr.entasia.corebungee.utils.BungeePlayer;
@@ -88,6 +90,8 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new AntibotCmd("antibot"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botsync"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botlink"));
+			getProxy().getPluginManager().registerCommand(this, new AdminCmd("admin"));
+			getProxy().getPluginManager().registerCommand(this, new HeroCmd("herobrine"));
 
 
 			getProxy().getPluginManager().registerListener(this, new Base());
