@@ -139,14 +139,26 @@ public class Base implements Listener {
 		}
 	}
 
+	public boolean charCheck(char c){
+		if(c>=97&&c<=122) return false;
+		else if(c<=65&&c>=60) return false;
+		else return c != 95;
+
+	}
+
 	@EventHandler
 	public void onPostLogin(PostLoginEvent e){
 		BungeePlayer bp = Main.getPlayer(e.getPlayer().getName());
 		bp.p = e.getPlayer();
 
-		StringBuilder sb = new StringBuilder();
-		for(ProxiedPlayer lp : ProxyServer.getInstance().getPlayers())sb.append(" ").append(lp.getName());
-		if(sb.length()!=0)SocketClient.sendData("players "+sb.toString().substring(1));
+		for(char c : bp.p.getName().toCharArray()){
+			if(charCheck(c)){
+				bp.p.disconnect(ChatComponent.create("Caractères invalides dans ton pseudo : "+bp.p.getName()));
+				return;
+			}
+
+
+		}
 
 		if(Main.lockdown!=null) {
 			if (bp.p.hasPermission("staff.lockdown.bypass")) {
@@ -156,7 +168,6 @@ public class Base implements Listener {
 				return;
 			}
 		}
-
 
 		if (bp.p.getPendingConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
 			if(bp.p.hasPermission("mod.dnsvanish")){
@@ -179,6 +190,10 @@ public class Base implements Listener {
 			vanishMsg(bp.p);
 		}else if(Main.joinquit)Main.main.getProxy().broadcast(ChatComponent.create("§aJoin §8»§7 " + Main.formatPlayer(bp.p) + "§7 a rejoint §bEnta§7sia !"));
 		bp.lastjointime = new Date().getTime();
+
+		StringBuilder sb = new StringBuilder();
+		for(ProxiedPlayer lp : ProxyServer.getInstance().getPlayers())sb.append(" ").append(lp.getName());
+		if(sb.length()!=0)SocketClient.sendData("players "+sb.toString().substring(1));
 	}
 
 	public static void vanishMsg(ProxiedPlayer p){
