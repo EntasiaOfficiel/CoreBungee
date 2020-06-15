@@ -98,7 +98,7 @@ public class Base implements Listener {
 	public void onBan(PunishmentEvent e) {
 		if(e.getPunishment().getType().equals(PunishmentType.BAN) || e.getPunishment().getType().equals(PunishmentType.IP_BAN)) {
 			Main.sqlConnection.checkConnect();
-			Main.sqlConnection.fastUpdate("DELETE * FROM global.reports WHERE reported = ?", e.getPunishment().getName());
+			Main.sqlConnection.fastUpdate("DELETE FROM global.reports WHERE reported = ?", e.getPunishment().getName());
 		}
 	}
 
