@@ -15,7 +15,7 @@ public class Login implements Listener {
 
 	static final String[] logincmds = new String[]{"login", "log", "lo", "l", "register", "reg"};
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = -115)
 	public void onChat(ChatEvent e) {
 		if(!Common.enableDev) {
 			if (Main.logins.contains(e.getSender().toString())) return;
@@ -28,7 +28,7 @@ public class Login implements Listener {
 			((ProxiedPlayer) e.getSender()).sendMessage("§cTu dois d'abord te t'enregistrer ou t'authentifier !");
 		}
 	}
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = -115)
 	public void onServerChange(ServerSwitchEvent e) {
 		if(!Common.enableDev) {
 			if (e.getPlayer().getServer().getInfo().getName().equals("login")) return;
@@ -37,7 +37,7 @@ public class Login implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = -115)
 	public void onDisconnect(PlayerDisconnectEvent e) {
 		if(!Common.enableDev){
 			while(Main.logins.contains(e.getPlayer().getName())){

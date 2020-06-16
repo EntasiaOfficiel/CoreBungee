@@ -90,6 +90,7 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new AntibotCmd("antibot"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botsync"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botlink"));
+
 			getProxy().getPluginManager().registerCommand(this, new AdminCmd("admin"));
 			getProxy().getPluginManager().registerCommand(this, new HeroCmd("herobrine"));
 
