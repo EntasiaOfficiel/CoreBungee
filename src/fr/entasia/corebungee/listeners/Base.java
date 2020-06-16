@@ -141,7 +141,8 @@ public class Base implements Listener {
 
 	public boolean charCheck(char c){
 		if(c>=97&&c<=122) return false;
-		else if(c<=65&&c>=60) return false;
+		else if(c>=65&&c<=90) return false;
+		else if(c>=48&&c<=57) return false;
 		else return c != 95;
 
 	}
