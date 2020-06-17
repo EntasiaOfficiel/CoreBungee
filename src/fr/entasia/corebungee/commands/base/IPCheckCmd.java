@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -28,7 +29,7 @@ public class IPCheckCmd extends Command {
 					try{
 						ip = InetAddress.getByName(args[0]).getAddress();
 					}catch(UnknownHostException|NullPointerException e){
-						sender.sendMessage("§cArgument invalide !");
+						sender.sendMessage(ChatComponent.create("§cArgument invalide !"));
 						return;
 					}
 				}else ip = a.getAddress().getAddress().getAddress();
@@ -38,12 +39,12 @@ public class IPCheckCmd extends Command {
 					if (Arrays.equals(p.getAddress().getAddress().getAddress(), ip)) paccept.add(p);
 
 				if (paccept.size() == 0)
-					sender.sendMessage("§cAucun joueur ne possède cette adresse ip");
+					sender.sendMessage(ChatComponent.create("§cAucun joueur ne possède cette adresse ip"));
 				else {
-					sender.sendMessage("§aLes joueurs qui possèdent cette ip sont :");
-					paccept.forEach(b -> sender.sendMessage("§8- §7" + b.getDisplayName()));
+					sender.sendMessage(ChatComponent.create("§aLes joueurs qui possèdent cette ip sont :"));
+					paccept.forEach(b -> sender.sendMessage(ChatComponent.create("§8- §7" + b.getDisplayName())));
 				}
-			} else sender.sendMessage("§cSyntaxe §8» §c/whoisip <ip/pseudo>");
-		}else sender.sendMessage("§cTu n'as pas accès à cette commande !");
+			} else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/whoisip <ip/pseudo>"));
+		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

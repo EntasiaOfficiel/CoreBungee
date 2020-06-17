@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -18,12 +19,12 @@ public class ForceKickCmd extends Command {
 			if(args.length == 1) {
 				ProxiedPlayer kicked = Main.main.getProxy().getPlayer(args[0]);
 				if(kicked==null)
-					sender.sendMessage("§7Kick §8» §7"+args[0]+" n'existe pas ou n'est pas connecté !");
+					sender.sendMessage(ChatComponent.create("§7Kick §8» §7"+args[0]+" n'existe pas ou n'est pas connecté !"));
 				else{
-					sender.sendMessage("§7Kick §8» §7Vous avez kick " + args[0]);
+					sender.sendMessage(ChatComponent.create("§7Kick §8» §7Vous avez kick " + args[0]));
 					kicked.disconnect(new TextComponent("§7Vous avez été kick du serveur !"));
 				}
-			}else sender.sendMessage("§cSyntaxe §8» §c/forcekick <joueur>");
-		}else sender.sendMessage("§cTu n'as pas accès à cette commande !");
+			}else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/forcekick <joueur>"));
+		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

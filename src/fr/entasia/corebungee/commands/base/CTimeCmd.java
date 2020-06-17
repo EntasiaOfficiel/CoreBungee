@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -30,16 +31,16 @@ public class CTimeCmd extends Command {
 					weekTime = rs.getString(0);
 					monthTime = rs.getString(1);
 					totalTime = rs.getString(2);
-					sender.sendMessage("§9Temps §8» : §7" + ((ProxiedPlayer)sender).getDisplayName());
-					sender.sendMessage("§7Temps de connexion hebdomadaire : " + weekTime );
-					sender.sendMessage("§7Temps de connexion mensuel : " + monthTime );
-					sender.sendMessage("§7Temps de connexion total : " + totalTime );
+					sender.sendMessage(ChatComponent.create("§9Temps §8» : §7" + ((ProxiedPlayer)sender).getDisplayName()));
+					sender.sendMessage(ChatComponent.create("§7Temps de connexion hebdomadaire : " + weekTime));
+					sender.sendMessage(ChatComponent.create("§7Temps de connexion mensuel : " + monthTime));
+					sender.sendMessage(ChatComponent.create("§7Temps de connexion total : " + totalTime));
 				}else{
-					sender.sendMessage("§9Temps §8» §cCette personne n'existe pas !");
+					sender.sendMessage(ChatComponent.create("§9Temps §8» §cCette personne n'existe pas !"));
 				}
 			}catch (SQLException e){
 				e.printStackTrace();
-				sender.sendMessage("§9Temps §8» §cUne erreur interne s'est produite !");
+				sender.sendMessage(ChatComponent.create("§9Temps §8» §cUne erreur interne s'est produite !"));
 			}
 		}
 	}

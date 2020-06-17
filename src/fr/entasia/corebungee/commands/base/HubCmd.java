@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -16,9 +17,9 @@ public class HubCmd extends Command {
 		ProxiedPlayer p = (ProxiedPlayer)sender;
 		String a = p.getServer().getInfo().getName().toLowerCase();
 		if(a.equals("login")) p.chat("/hub");
-		else if(a.equals("hub")) p.sendMessage("§cTu es déja au lobby !");
+		else if(a.equals("hub")) p.sendMessage(ChatComponent.create("§cTu es déja au lobby !"));
 		else{
-			p.sendMessage("§6Téléportation au lobby en cours...");
+			p.sendMessage(ChatComponent.create("§6Téléportation au lobby en cours..."));
 			p.connect(Main.hubServer);
 		}
 	}

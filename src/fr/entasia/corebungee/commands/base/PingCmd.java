@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -23,14 +24,14 @@ public class PingCmd extends Command {
 		if(args.length==0){
 			if(sender instanceof ProxiedPlayer) {
 				ProxiedPlayer p = (ProxiedPlayer) sender;
-				p.sendMessage("§6Ton ping actuel : " + ping(p.getPing()));
+				p.sendMessage(ChatComponent.create("§6Ton ping actuel : " + ping(p.getPing())));
 			}
 		}else{
 			ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
 			if(target==null)
-				sender.sendMessage("§7Kick §8» §7"+args[0]+" n'existe pas ou n'est pas connecté !");
+				sender.sendMessage(ChatComponent.create("§7Kick §8» §7"+args[0]+" n'existe pas ou n'est pas connecté !"));
 			else
-				sender.sendMessage("§6Ping actuel de §3"+args[0]+" §6 : "+ping(target.getPing()));
+				sender.sendMessage(ChatComponent.create("§6Ping actuel de §3"+args[0]+" §6 : "+ping(target.getPing())));
 		}
 	}
 }

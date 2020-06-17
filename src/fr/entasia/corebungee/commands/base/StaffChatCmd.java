@@ -33,8 +33,8 @@ public class StaffChatCmd extends Command {
 	}
 
 	public static void staffchatTalk(ProxiedPlayer p, String msg){
-		Main.permMsg("§bStaff§3Chat §8» §7"+p.getServer().getInfo().getName() +" §8» "+ Main.formatPlayer(p)+" §d» §b"+
-						TextUtils.formatMessage(msg.replace("&", "§"), ChatColor.AQUA),
+		msg = TextUtils.setColors(TextUtils.formatMessage(msg, ChatColor.AQUA));
+		Main.permMsg("§bStaff§3Chat §8» §7"+p.getServer().getInfo().getName() +" §8» "+ Main.formatPlayer(p)+" §d» §b"+ msg,
 				"staff.staffchat");
 	}
 }

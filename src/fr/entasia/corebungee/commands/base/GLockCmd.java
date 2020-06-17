@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
@@ -18,22 +19,22 @@ public class GLockCmd extends Command {
 		if(sender.hasPermission("entasia.glockdown.use")) {
 			if (args.length != 0 && (args[0].equals("status") || args[0].equals("statut"))) {
 				if (Main.lockdown == null)
-					sender.sendMessage("§6§lGlobal§6 Lockdown §8» §6Actuellement §cDésactivé§6 !");
+					sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §6Actuellement §cDésactivé§6 !"));
 				else
-					sender.sendMessage("§6§lGlobal§6 Lockdown §8» §6Actuellement §aActivé§6 !");
+					sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §6Actuellement §aActivé§6 !"));
 			} else {
 				if (Main.lockdown == null) {
 					if(args.length==0) {
 						Main.lockdown = "aucune raison définie";
-						sender.sendMessage("§6§lGlobal§6 Lockdown §8» §aActivé !");
+						sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §aActivé !"));
 					}else {
 
 						Main.lockdown = String.join(" ", args);
-						sender.sendMessage("§6§lGlobal§6 Lockdown §8» §aActivé ! Raison : §6"+Main.lockdown);
+						sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §aActivé ! Raison : §6"+Main.lockdown));
 					}
 				} else {
 					Main.lockdown = null;
-					sender.sendMessage("§6§lGlobal§6 Lockdown §8» §cDésactivé !");
+					sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §cDésactivé !"));
 				}
 				Main.configuration.set("lockdown", Main.lockdown);
 				try{
@@ -42,6 +43,6 @@ public class GLockCmd extends Command {
 					e.printStackTrace();
 				}
 			}
-		}else sender.sendMessage("§cTu n'as pas accès à cette commande !");
+		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }
