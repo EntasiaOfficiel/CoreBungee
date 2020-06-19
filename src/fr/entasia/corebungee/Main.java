@@ -39,7 +39,7 @@ public class Main extends Plugin{
 	public static Main main;
 	public static boolean joinquit=true;
 	public static String lockdown;
-	public static SQLConnection sqlConnection;
+	public static SQLConnection sql;
 	public static ServerInfo hubServer;
 
 	public static Configuration configuration;
@@ -52,7 +52,6 @@ public class Main extends Plugin{
 	public static Map<String, ProxiedPlayer> vanishs = new HashMap<>();
 	public static HashMap<String, BungeePlayer> playerCache = new HashMap<>();
 	public static List<UUID> staffchat = new ArrayList<>();
-	public static ArrayList<String> logins = new ArrayList<>();
 
 
 	@Override
@@ -63,8 +62,8 @@ public class Main extends Plugin{
 			hubServer = getProxy().getServerInfo("hub");
 			getLogger().info("Activation du plugin...");
 
-			sqlConnection = new SQLConnection("corebungee", "playerdata");
-			SQLUpdate.ps = sqlConnection.connection.prepareStatement("SELECT * from global.safelist");
+			sql = new SQLConnection("corebungee", "playerdata");
+			SQLUpdate.ps = sql.connection.prepareStatement("SELECT * from global.safelist");
 
 			getProxy().getPluginManager().registerCommand(this, new MsgCmd("msg"));
 			getProxy().getPluginManager().registerCommand(this, new WhoisCmd("whois"));
@@ -96,7 +95,6 @@ public class Main extends Plugin{
 
 
 			getProxy().getPluginManager().registerListener(this, new Base());
-			getProxy().getPluginManager().registerListener(this, new Login());
 
 			// PARTIE FICHIER CONFIG
 			if (!getDataFolder().exists()) {
@@ -123,7 +121,7 @@ public class Main extends Plugin{
 			if (lockdown.equals("")) lockdown = null;
 
 
-			ResultSet rs = sqlConnection.connection.prepareStatement("SELECT * from global.vanishs").executeQuery();
+			ResultSet rs = sql.connection.prepareStatement("SELECT * from global.vanishs").executeQuery();
 			while(rs.next()){
 				vanishs.put(rs.getString("name"), null);
 			}
@@ -182,13 +180,13 @@ public class Main extends Plugin{
 			bp = new BungeePlayer();
 			playerCache.put(name, bp);
 			try{
-				ResultSet rs = sqlConnection.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", name);
+				ResultSet rs = sql.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", name);
 				if(rs.next()){
 
 				}
 			}catch(SQLException e){
 				e.printStackTrace();
-				sqlConnection.broadcastError();
+				sql.broadcastError();
 			}
 		}
 		return bp;

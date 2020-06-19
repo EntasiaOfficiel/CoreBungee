@@ -33,9 +33,12 @@ public class AntiBot implements Listener {
 				String ip = e.getConnection().getAddress().getAddress().getHostAddress();
 				if(ips.get(ip)==null) {
 					e.setCancelled(true);
-					e.setCancelReason(ChatComponent.create("§cAntiBot :", "\nUne attaque est en cours !",
-							"\nLes connexions directes au serveur (connexion rapide) ont été temporairement suspendues",
-							"\nVeuillez ajouter le serveur à votre liste de serveur pour vous connecter"));
+					e.setCancelReason(new ChatComponent(
+							"§cAntiBot :",
+							"Une attaque est en cours !",
+							"Les connexions directes au serveur (connexion rapide) ont été temporairement suspendues",
+							"Veuillez ajouter le serveur à votre liste de serveur pour vous connecter")
+					.create());
 					return;
 				}else ips.remove(ip);
 			}
@@ -44,10 +47,13 @@ public class AntiBot implements Listener {
 				UUID uuid = e.getConnection().getUniqueId();
 				if(!Utils.safeList.contains(uuid)&&!Utils.safeListSQL.get(uuid).equals(ip)){
 					e.setCancelled(true);
-					e.setCancelReason(ChatComponent.create("§cAntiBot :", "\nUne attaque est en cours !",
-							"\nLes nouvelles connexions au serveur ont été temporairement suspendues",
-							"\nSi tu veux te connecter, va sur §bhttps://enta§7sia.fr/captcha-bot"));
-				return;
+					e.setCancelReason(new ChatComponent(
+							"§cAntiBot :",
+							"Une attaque est en cours !",
+							"Les nouvelles connexions au serveur ont été temporairement suspendues",
+							"Si tu veux te connecter, va sur §bhttps://enta§7sia.fr/captcha-bot")
+					.create());
+					return; // réfléchis pour le warning
 				}
 			}
 		}

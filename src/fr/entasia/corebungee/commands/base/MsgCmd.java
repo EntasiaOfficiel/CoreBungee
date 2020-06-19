@@ -3,7 +3,8 @@ package fr.entasia.corebungee.commands.base;
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.corebungee.Main;
-import me.leoko.advancedban.manager.PunishmentManager;
+import fr.entasia.sanctions.utils.MuteEntry;
+import fr.entasia.sanctions.utils.SanctionsAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -31,12 +32,14 @@ public class MsgCmd extends Command {
 				ProxiedPlayer p;
 				if (sender instanceof ProxiedPlayer){
 					p = (ProxiedPlayer) sender;
-					if(PunishmentManager.get().isMuted(p.getUniqueId().toString())) sender.sendMessage(ChatComponent.create("§7Tu es mute !"));
-					else{
+					MuteEntry se = SanctionsAPI.getMuteEntry(p.getName());
+					if(se==null){
 						Main.msgs.put(p.getUniqueId(), target.getDisplayName());
 						Main.msgs.put(target.getUniqueId(), p.getDisplayName());
 						sender.sendMessage(ChatComponent.create("§6MSG §8» " + Main.getSuffix(p) + "§b moi §3-> " + Main.formatPlayer(target) + " §7| §f" + msg));
 						target.sendMessage(ChatComponent.create("§6MSG §8» " + Main.formatPlayer(p) + "§3 -> " + Main.getSuffix(target) + "§b moi§7 | §f" + msg));
+					}else{
+						sender.sendMessage(ChatComponent.create("§cTu es encore muté pour §8"+TextUtils.secondsToTime(se.remaning())+"§c !"));
 					}
 				}else {
 					Main.msgs.put(null, target.getDisplayName());

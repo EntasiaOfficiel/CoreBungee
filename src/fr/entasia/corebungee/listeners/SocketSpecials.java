@@ -25,23 +25,6 @@ public class SocketSpecials {
 			}
 		});
 
-		SocketClient.addListener(new SocketEvent("login") {
-			@Override
-			public void onEvent(String[] data) {
-				if(data[0]==null) Main.main.getLogger().info("Login recu pour un joueur null");
-				else {
-					ProxiedPlayer p = ProxyServer.getInstance().getPlayer(data[0]);
-					if (p == null) Main.main.getLogger().info("Login recu pour un joueur non connecté au proxy");
-					else {
-						if (!Main.logins.contains(data[0])) {
-							Main.logins.add(data[0]);
-						}
-						p.connect(Main.hubServer);
-					}
-				}
-			}
-		});
-
 		SocketClient.addListener(new SocketEvent("syncok") {
 			@Override
 			public void onEvent(String[] data) {

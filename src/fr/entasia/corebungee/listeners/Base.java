@@ -2,17 +2,15 @@ package fr.entasia.corebungee.listeners;
 
 import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
+import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.commands.base.StaffChatCmd;
 import fr.entasia.corebungee.utils.BungeePlayer;
-import me.leoko.advancedban.bungee.event.PunishmentEvent;
-import me.leoko.advancedban.utils.PunishmentType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.protocol.packet.Chat;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -77,22 +75,14 @@ public class Base implements Listener {
 		return max/(float)pe > 0.6;
 	}
 
-	@EventHandler(priority = 127)
+	@EventHandler
 	public void onKick(ServerKickEvent e) {
 		System.out.println(1);
-		if(Main.logins.contains(e.getPlayer().getName())){
+		if(LoginUtils.logins.contains(e.getPlayer().getName())){
 			System.out.println(2);
 			e.setCancelled(true);
 			e.getPlayer().connect(Main.hubServer);
 			e.getPlayer().sendMessage(e.getKickReasonComponent());
-		}
-	}
-	
-	@EventHandler
-	public void onBan(PunishmentEvent e) {
-		if(e.getPunishment().getType().equals(PunishmentType.BAN) || e.getPunishment().getType().equals(PunishmentType.IP_BAN)) {
-			Main.sqlConnection.checkConnect();
-			Main.sqlConnection.fastUpdate("DELETE FROM global.reports WHERE reported = ?", e.getPunishment().getName());
 		}
 	}
 
@@ -173,7 +163,7 @@ public class Base implements Listener {
 					bp.p.sendMessage(ChatComponent.create("§3Vanish » §aActivé par DNS ! §b(Se désactivera à ta déconnexion"));
 					Main.vanishs.put(bp.p.getName(), bp.p);
 					SocketClient.sendData("broadcast vanish 1 "+bp.p.getName());
-					Main.sqlConnection.fastUpdate("INSERT INTO global.vanishs (name) VALUES (?)", bp.p.getName());
+					Main.sql.fastUpdate("INSERT INTO global.vanishs (name) VALUES (?)", bp.p.getName());
 					vanishMsg(bp.p);
 				}
 			}else{
@@ -212,7 +202,7 @@ public class Base implements Listener {
 			if (bp.p.getPendingConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
 				SocketClient.sendData("broadcast vanish 0 " + bp.p.getName());
 				Main.vanishs.remove(bp.p.getName());
-				Main.sqlConnection.fastUpdate("DELETE FROM global.vanishs where name=?", bp.p.getName());
+				Main.sql.fastUpdate("DELETE FROM global.vanishs where name=?", bp.p.getName());
 			}
 
 		} else if(Main.joinquit)Main.main.getProxy().broadcast(ChatComponent.create("§cQuit §8»§7 " + Main.formatPlayer(bp.p) + "§7 a quitté §bEnta§7sia !"));
@@ -221,9 +211,9 @@ public class Base implements Listener {
 			int time = (int) (new Date().getTime() - bp.lastjointime)/1000;
 			bp.lastjointime = 0;
 			bp.connectedtime += time;
-			Main.sqlConnection.checkConnect();
+			Main.sql.checkConnect();
 			try{
-				PreparedStatement a = Main.sqlConnection.connection.prepareStatement("UPDATE playerdata.global SET time_week=time_week+?, time_month=time_month+?, time_total=time_total+? WHERE uuid=?");
+				PreparedStatement a = Main.sql.connection.prepareStatement("UPDATE playerdata.global SET time_week=time_week+?, time_month=time_month+?, time_total=time_total+? WHERE uuid=?");
 				a.setInt(1, time);
 				a.setInt(2, time);
 				a.setInt(3, time);

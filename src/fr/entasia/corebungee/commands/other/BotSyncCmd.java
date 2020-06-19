@@ -24,14 +24,14 @@ public class BotSyncCmd extends Command {
 			BungeePlayer bp = Main.getPlayer(sender.getName());
 			if(bp.discordID==null){
 				try{
-					ResultSet rs = Main.sqlConnection.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", bp.p.getName());
+					ResultSet rs = Main.sql.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", bp.p.getName());
 					if(rs.next()){
 						bp.discordID = rs.getString("discord_id");
 						if(bp.discordID.equals(""))bp.discordID = null;
 					}else bp.discordID = null;
 				}catch(SQLException e){
 					e.printStackTrace();
-					Main.sqlConnection.broadcastError();
+					Main.sql.broadcastError();
 					bp.p.sendMessage("§cUne erreur s'est produite ! Contacte un Membre du Staff");
 					return;
 				}
@@ -63,7 +63,7 @@ public class BotSyncCmd extends Command {
 					sender.sendMessage("§cArguments disponibles :");
 					sender.sendMessage("§c-unlink");
 				}else if(args[0].equals("unlink")){
-					if(Main.sqlConnection.fastUpdate("UPDATE playerdata.global SET discord_id=null WHERE name=?", bp.p.getName())==-1){
+					if(Main.sql.fastUpdate("UPDATE playerdata.global SET discord_id=null WHERE name=?", bp.p.getName())==-1){
 						sender.sendMessage("§cUne erreur s'est produite ! Contacte un membre du Staff !");
 					}else{
 						sender.sendMessage("§aTu as été délié de ton compte Discord !");

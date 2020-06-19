@@ -21,10 +21,10 @@ public class CTimeCmd extends Command {
 		if(args.length ==0)
 			sender.sendMessage("§cSyntaxe §8» §c/ctime <player>");
 		else{
-			Main.sqlConnection.checkConnect();
+			Main.sql.checkConnect();
 			ResultSet rs;
 			try {
-				rs = Main.sqlConnection.connection.prepareStatement("SELECT time_week, time_month, time_total FROM playerdata.global WHERE name = '"+args[0]+"'").executeQuery();
+				rs = Main.sql.connection.prepareStatement("SELECT time_week, time_month, time_total FROM playerdata.global WHERE name = '"+args[0]+"'").executeQuery();
 				String weekTime, monthTime, totalTime;
 
 				if(rs.next()){
