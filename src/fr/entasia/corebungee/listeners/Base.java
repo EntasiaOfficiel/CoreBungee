@@ -62,10 +62,9 @@ public class Base implements Listener {
 		}
 	}
 	public static boolean checkMajs(String msg){
-		int max = msg.length(); // temp
-		if(max<4)return false;
+		if(msg.length()<4)return false;
 		int pe = 0;
-		max = 0;
+		int max = 0;
 		for(char c : msg.toCharArray()){
 			if(c>=65&&c<=90){
 				pe++;
@@ -74,6 +73,7 @@ public class Base implements Listener {
 				max++;
 			}
 		}
+		if(pe<3)return false;
 		return max/(float)pe > 0.6;
 	}
 
