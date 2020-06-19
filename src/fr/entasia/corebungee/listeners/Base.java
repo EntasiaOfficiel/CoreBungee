@@ -40,15 +40,6 @@ public class Base implements Listener {
 					}else{
 						Main.staffchat.remove(p.getUniqueId());
 					}
-					/*
-					1&&1 = 1
-					1&&0 = 0
-
-					!1 = 0
-
-					1||1 = 1
-					1||0 = 1
-					 */
 				}else{
 					if(bp.lastmsg.equals(e.getMessage())&&bp.sentSince()<5000){
 						p.sendMessage(ChatComponent.create("§cNe spam pas !"));
@@ -70,17 +61,20 @@ public class Base implements Listener {
 			}
 		}
 	}
-
 	public static boolean checkMajs(String msg){
+		int max = msg.length(); // temp
+		if(max<4)return false;
 		int pe = 0;
-		int max = (int) (msg.length()*0.75);
+		max = 0;
 		for(char c : msg.toCharArray()){
 			if(c>=65&&c<=90){
 				pe++;
-				if(pe>max)return true;
+				max++;
+			}else if(c>=97&&c<=122){
+				max++;
 			}
 		}
-		return false;
+		return max/(float)pe > 0.6;
 	}
 
 	@EventHandler(priority = 127)
