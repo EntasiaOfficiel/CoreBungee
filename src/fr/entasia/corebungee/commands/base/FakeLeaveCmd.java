@@ -1,6 +1,7 @@
 package fr.entasia.corebungee.commands.base;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -17,7 +18,7 @@ public class FakeLeaveCmd extends Command {
 		if(!(sender instanceof ProxiedPlayer))return;
 		if(sender.hasPermission("entasia.fakemessages")){
 			ProxiedPlayer p = (ProxiedPlayer) sender;
-			Main.permMsg("§e" + p.getDisplayName() + " a utilisé le fakeleave", "staff.fakemessages.see");
+			ServerUtils.permMsg("staff.fakemessages", "§e" + p.getDisplayName() + " a utilisé le fakeleave");
 			Main.main.getProxy().broadcast(ChatComponent.create("§cQuit §8»§7 " + Main.formatPlayer(p) + "§7 a quitté §bEnta§7sia !"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}

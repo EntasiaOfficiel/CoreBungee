@@ -19,7 +19,7 @@ public class CTimeCmd extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if(args.length ==0)
-			sender.sendMessage("§cSyntaxe §8» §c/ctime <player>");
+			sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/ctime <player>"));
 		else{
 			Main.sql.checkConnect();
 			ResultSet rs;

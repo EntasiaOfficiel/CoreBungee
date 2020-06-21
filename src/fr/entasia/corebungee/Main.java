@@ -1,5 +1,6 @@
 package fr.entasia.corebungee;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.sql.SQLConnection;
 import fr.entasia.corebungee.antibot.SQLUpdate;
 import fr.entasia.corebungee.commands.base.*;
@@ -30,6 +31,7 @@ import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import fr.entasia.corebungee.jda.JDABot;
 
 public class Main extends Plugin{
 
@@ -45,7 +47,7 @@ public class Main extends Plugin{
 	public static Configuration configuration;
 	public static File configFile;
 
-	public static LuckPermsApi LuckAPI;
+	public static LuckPermsApi lpAPI;
 	public static ConfigurationProvider provider;
 
 	public static Map<UUID, String> msgs = new HashMap<>();
@@ -58,7 +60,7 @@ public class Main extends Plugin{
 	public void onEnable() {
 		try {
 			main = this;
-			LuckAPI = LuckPerms.getApi();
+			lpAPI = LuckPerms.getApi();
 			hubServer = getProxy().getServerInfo("hub");
 			getLogger().info("Activation du plugin...");
 
@@ -115,6 +117,10 @@ public class Main extends Plugin{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
+//			String token = configuration.getString("token");
+//			if(token!=null&&!token.equals(""))JDABot.init(token);
+
 			// FIN PARTIE FICHIER CONFIG
 
 			lockdown = configuration.getString("lockdown");
@@ -136,17 +142,11 @@ public class Main extends Plugin{
 		}
 	}
 
-	public static void permMsg(String in, String perm) {
-		for(ProxiedPlayer player : main.getProxy().getPlayers()) {
-			if(player.hasPermission(perm)) player.sendMessage(in);
-		}
-	}
-
 	public static String getSuffix(ProxiedPlayer player) {
-		User user = LuckAPI.getUser(player.getUniqueId());
+		User user = lpAPI.getUser(player.getUniqueId());
 		if(user==null)return "§7Inconnu";
 
-		Contexts contexts = LuckAPI.getContextManager().getApplicableContexts(player);
+		Contexts contexts = lpAPI.getContextManager().getApplicableContexts(player);
 		MetaData metaData = user.getCachedData().getMetaData(contexts);
 
 		if(metaData.getSuffix()==null)return "";

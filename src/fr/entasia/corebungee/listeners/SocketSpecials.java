@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.listeners;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.apis.socket.SocketEvent;
 import fr.entasia.corebungee.Main;
@@ -32,7 +33,7 @@ public class SocketSpecials {
 				bp.discordID = null;
 				bp.discordTask.cancel();
 				bp.discordTask = null;
-				if(bp.isOnline())bp.p.sendMessage("§aTon compte à été lié avec succès ! :D");
+				if(bp.isOnline())bp.p.sendMessage(ChatComponent.create("§aTon compte à été lié avec succès ! :D"));
 			}
 		});
 

@@ -1,5 +1,7 @@
 package fr.entasia.corebungee.commands.base;
 
+import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.apis.TextUtils;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.ChatColor;
@@ -21,20 +23,19 @@ public class StaffChatCmd extends Command {
 			if(args.length == 0){
 				if(Main.staffchat.contains(p.getUniqueId())) {
 					Main.staffchat.remove(p.getUniqueId());
-					p.sendMessage("§eVous parlez maintenant dans le chat normal !");
+					p.sendMessage(ChatComponent.create("§eVous parlez maintenant dans le chat normal !"));
 				}else{
 					Main.staffchat.add(p.getUniqueId());
-					p.sendMessage("§eVous parlez maintenant dans le §bStaff§3Chat §e!");
+					p.sendMessage(ChatComponent.create("§eVous parlez maintenant dans le §bStaff§3Chat §e!"));
 				}
 			}else{
 				staffchatTalk(p, String.join(" ", args));
 			}
-		}else sender.sendMessage("§cTu n'as pas accès à cette commande !");
+		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 
 	public static void staffchatTalk(ProxiedPlayer p, String msg){
 		msg = TextUtils.setColors(TextUtils.formatMessage(msg, ChatColor.AQUA));
-		Main.permMsg("§bStaff§3Chat §8» §7"+p.getServer().getInfo().getName() +" §8» "+ Main.formatPlayer(p)+" §d» §b"+ msg,
-				"staff.staffchat");
+		ServerUtils.permMsg("staff.staffchat", "§bStaff§3Chat §8» §7"+p.getServer().getInfo().getName() +" §8» "+ Main.formatPlayer(p)+" §d» §b"+ msg);
 	}
 }

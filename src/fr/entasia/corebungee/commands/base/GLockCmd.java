@@ -25,7 +25,7 @@ public class GLockCmd extends Command {
 			} else {
 				if (Main.lockdown == null) {
 					if(args.length==0) {
-						Main.lockdown = "aucune raison définie";
+						Main.lockdown = "";
 						sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §aActivé !"));
 					}else {
 

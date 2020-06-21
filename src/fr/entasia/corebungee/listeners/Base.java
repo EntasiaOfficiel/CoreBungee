@@ -1,11 +1,15 @@
 package fr.entasia.corebungee.listeners;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.commands.base.StaffChatCmd;
 import fr.entasia.corebungee.utils.BungeePlayer;
+import me.lucko.luckperms.api.Node;
+import me.lucko.luckperms.api.User;
+import me.lucko.luckperms.api.manager.UserManager;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
@@ -15,8 +19,14 @@ import net.md_5.bungee.event.EventHandler;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Base implements Listener {
+
+	private static final UserManager userManager = Main.lpAPI.getUserManager();
+	private static final Node lockdownNode = fr.entasia.sanctions.Main.lpAPI.buildNode("staff.lockdown.bypass").build();
+	private static final Node dnsVanishNode = fr.entasia.sanctions.Main.lpAPI.buildNode("mod.dnsvanish").build();
 
 	private final String[] cmdcompletes = {"ctime", "forcekick", "ipcheck", "join", "msg", "ping", "whois"};
 	@EventHandler
@@ -110,16 +120,60 @@ public class Base implements Listener {
 		}
 	}
 
-	private String lreason(String rcolor) {
-		if (Main.lockdown==null)return "";
-		else return "Raison : "+rcolor+Main.lockdown;
-	}
-
 	@EventHandler
-	public void onPreLogin(PreLoginEvent e) {
+	public void onLogin(LoginEvent e) {
 		if(e.getConnection().getVersion()<110) { // 1.9.4
 			e.setCancelled(true);
 			e.setCancelReason(ChatComponent.create("§cDésolé, nous n'acceptons plus les versions inférieures à la 1.9.4 !"));
+		}else {
+			for(char c : e.getConnection().getName().toCharArray()){
+				if(charCheck(c)) {
+					e.setCancelled(true);
+					e.setCancelReason(ChatComponent.create("Caractère invalide dans ton pseudo : " + e.getConnection().getName()));
+					return;
+				}
+			}
+
+			UUID uuid = e.getConnection().getUniqueId();
+			User u = userManager.getUser(uuid);
+			if (u == null) {
+				try {
+					u = userManager.loadUser(uuid).get();
+					if (u == null) throw new Exception("Failed to load user data  : " + e.getConnection().getName());
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					e.setCancelled(true);
+					e.setCancelReason(ChatComponent.create("§cUne erreur est survenue lors du chargement de tes données ! Contacte un membre du Staff"));
+					return;
+				}
+			}
+			if (Main.lockdown != null) {
+				if (!u.hasPermission(lockdownNode).asBoolean()) {
+					e.setCancelled(true);
+					e.setCancelReason(ChatComponent.create(
+							"§cLe serveur est en maintenance ! §7"+Main.lockdown)
+					);
+					ServerUtils.permMsg("log.lockdownjoin",
+							"§c§lGlobal §cLockdown : "+e.getConnection().getName()+" à essayé de rejoindre le serveur en Lockdown !");
+					return;
+				}
+			}
+
+			if (e.getConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
+				if(u.hasPermission(dnsVanishNode).asBoolean()){
+					if(Main.vanishs.containsKey(e.getConnection().getName())) {
+						e.setCancelled(true);
+						e.setCancelReason(ChatComponent.create("§cTu es déja en vanish ! Merci de te connecter via l'adresse play.entasia.fr"));
+						return;
+					}
+				}else{
+					e.setCancelled(true);
+					e.setCancelReason(ChatComponent.create("§cMerci de te connecter via l'adresse play.entasia.fr !"));
+					return;
+				}
+			}
+
+
 		}
 	}
 
@@ -136,53 +190,30 @@ public class Base implements Listener {
 		BungeePlayer bp = Main.getPlayer(e.getPlayer().getName());
 		bp.p = e.getPlayer();
 
-		for(char c : bp.p.getName().toCharArray()){
-			if(charCheck(c)){
-				bp.p.disconnect(ChatComponent.create("Caractères invalides dans ton pseudo : "+bp.p.getName()));
-				return;
-			}
-
-
-		}
-
-		if(Main.lockdown!=null) {
-			if (bp.p.hasPermission("staff.lockdown.bypass")) {
-				bp.p.sendMessage(ChatComponent.create("§6Lockdown » §7Lockdown bypass ! " + lreason("§8")));
-			} else{
-				bp.p.disconnect(ChatComponent.create("§cLe serveur est en maintenance ! " + lreason("§7")));
-				return;
-			}
+		if(Main.lockdown!=null){
+			bp.p.sendMessage(ChatComponent.create("§c§lGlobal §cLockdown bypass ! §7"+Main.lockdown));
 		}
 
 		if (bp.p.getPendingConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
-			if(bp.p.hasPermission("mod.dnsvanish")){
-				if(Main.vanishs.containsKey(bp.p.getName())) {
-					bp.p.disconnect(ChatComponent.create("§cTu es déja en vanish ! Merci de te connecter via l'adresse play.entasia.fr"));
-					return;
-				}else{
-					bp.p.sendMessage(ChatComponent.create("§3Vanish » §aActivé par DNS ! §b(Se désactivera à ta déconnexion"));
-					Main.vanishs.put(bp.p.getName(), bp.p);
-					SocketClient.sendData("broadcast vanish 1 "+bp.p.getName());
-					Main.sql.fastUpdate("INSERT INTO global.vanishs (name) VALUES (?)", bp.p.getName());
-					vanishMsg(bp.p);
-				}
-			}else{
-				bp.p.disconnect(ChatComponent.create("§cMerci de te connecter via l'adresse play.entasia.fr !"));
-				return;
-			}
+			bp.p.sendMessage(ChatComponent.create("§3Vanish » §aActivé par DNS ! §b(Se désactivera à ta déconnexion"));
+			Main.vanishs.put(bp.p.getName(), bp.p);
+			SocketClient.sendData("broadcast vanish 1 " + bp.p.getName());
+			Main.sql.fastUpdate("INSERT INTO global.vanishs (name) VALUES (?)", bp.p.getName());
+			vanishMsg(bp.p);
 		}else if(Main.vanishs.containsKey(bp.p.getName())) {
 			bp.p.sendMessage(ChatComponent.create("§3Vanish » §cRestauré !"));
 			vanishMsg(bp.p);
 		}else if(Main.joinquit)Main.main.getProxy().broadcast(ChatComponent.create("§aJoin §8»§7 " + Main.formatPlayer(bp.p) + "§7 a rejoint §bEnta§7sia !"));
-		bp.lastjointime = new Date().getTime();
 
+
+		bp.lastjointime = new Date().getTime();
 		StringBuilder sb = new StringBuilder();
 		for(ProxiedPlayer lp : ProxyServer.getInstance().getPlayers())sb.append(" ").append(lp.getName());
 		if(sb.length()!=0)SocketClient.sendData("players "+sb.toString().substring(1));
 	}
 
 	public static void vanishMsg(ProxiedPlayer p){
-		Main.permMsg( Main.formatPlayer(p)+"§e a rejoint §bEnta§7sia§e en vanish !", "staff.vanish");
+		ServerUtils.permMsg( "mod.vanishmsg", Main.formatPlayer(p)+"§e a rejoint §bEnta§7sia§e en vanish !");
 
 	}
 
@@ -198,7 +229,7 @@ public class Base implements Listener {
 		else SocketClient.sendData("players "+sb.toString().substring(1));
 
 		if (Main.vanishs.containsKey(bp.p.getName())) {
-			Main.permMsg(Main.formatPlayer(bp.p) + "§e a quitté §bEnta§7sia§e en vanish !", "staff.vanish");
+			ServerUtils.permMsg("mod.vanishmsg",Main.formatPlayer(bp.p) + "§e a quitté §bEnta§7sia§e en vanish !");
 			if (bp.p.getPendingConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
 				SocketClient.sendData("broadcast vanish 0 " + bp.p.getName());
 				Main.vanishs.remove(bp.p.getName());

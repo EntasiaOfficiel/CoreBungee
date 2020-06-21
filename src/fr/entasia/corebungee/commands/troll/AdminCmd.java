@@ -19,7 +19,8 @@ public class AdminCmd extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		ServerUtils.permMsg("log.troll", "§6Troll : §e"+sender.getName()+" à activé la commande /admin !");
 		sender.sendMessage(ChatComponent.create("§cPassage admin en cours.."));
-		Main.main.getProxy().getScheduler().schedule(Main.main, () -> sender.sendMessage("§c§kMM§4§lUNE ERREUR INTERNE EST SURVENUE, SERVEUR CORROMPU§c§kMM"),
+		Main.main.getProxy().getScheduler().schedule(Main.main, () -> sender.sendMessage(
+				ChatComponent.create("§c§kMM§4§lUNE ERREUR INTERNE EST SURVENUE, SERVEUR CORROMPU§c§kMM")),
 				6, TimeUnit.SECONDS);
 	}
 }

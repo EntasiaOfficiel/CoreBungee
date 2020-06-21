@@ -1,6 +1,7 @@
 package fr.entasia.corebungee.commands.base;
 
 import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.ServerUtils;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -20,7 +21,7 @@ public class HelpopCmd extends Command {
 		else{
 			ProxiedPlayer p = (ProxiedPlayer) sender;
 			String msg = String.join(" ", args);
-			Main.permMsg("§eMessage Staff §8» §7"+p.getServer().getInfo().getName()+" §8» "+Main.formatPlayer(p)+" §d» §f"+msg, "entasia.helpop.recieve");
+			ServerUtils.permMsg("staff.helpop.recieve","§eMessage Staff §8» §7"+p.getServer().getInfo().getName()+" §8» "+Main.formatPlayer(p)+" §d» §f"+msg);
 		}
 	}
 

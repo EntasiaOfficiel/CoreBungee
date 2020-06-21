@@ -1,5 +1,6 @@
 package fr.entasia.corebungee.utils;
 
+import fr.entasia.apis.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.ProxyServer;
 import org.apache.logging.log4j.core.config.Scheduled;
@@ -20,7 +21,7 @@ public class DiscordSyncTask implements Runnable {
 
 	@Override
 	public void run() {
-		if(bp.isOnline()) bp.p.sendMessage("§cTon code §4"+bp.discordID+"§c à expiré !");
+		if(bp.isOnline()) bp.p.sendMessage(ChatComponent.create("§cTon code §4"+bp.discordID+"§c à expiré !"));
 		bp.discordID = "none";
 
 	}
