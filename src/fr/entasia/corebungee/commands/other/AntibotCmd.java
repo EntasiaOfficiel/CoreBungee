@@ -1,6 +1,6 @@
 package fr.entasia.corebungee.commands.other;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 

@@ -1,7 +1,7 @@
 package fr.entasia.corebungee.commands.base;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.other.ChatComponent;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.sanctions.utils.MuteEntry;
 import fr.entasia.sanctions.utils.SanctionsAPI;

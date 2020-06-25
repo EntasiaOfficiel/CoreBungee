@@ -1,11 +1,10 @@
 package fr.entasia.corebungee.commands.other;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.utils.BungeePlayer;
 import fr.entasia.corebungee.utils.DiscordSyncTask;
-import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;

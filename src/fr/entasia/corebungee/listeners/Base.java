@@ -1,8 +1,8 @@
 package fr.entasia.corebungee.listeners;
 
-import fr.entasia.apis.ChatComponent;
-import fr.entasia.apis.ServerUtils;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
+import fr.entasia.apis.utils.ServerUtils;
 import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.commands.base.StaffChatCmd;
@@ -20,7 +20,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 public class Base implements Listener {
 
@@ -70,19 +69,20 @@ public class Base implements Listener {
 		}
 	}
 	public static boolean checkMajs(String msg){
-		if(msg.length()<4)return false;
-		int pe = 0;
-		int max = 0;
-		for(char c : msg.toCharArray()){
-			if(c>=65&&c<=90){
-				pe++;
-				max++;
-			}else if(c>=97&&c<=122){
-				max++;
-			}
-		}
-		if(pe<3)return false;
-		return max/(float)pe > 0.6;
+		return false;
+//		if(msg.length()<4)return false;
+//		int pe = 0;
+//		int max = 0;
+//		for(char c : msg.toCharArray()){
+//			if(c>=65&&c<=90){
+//				pe++;
+//				max++;
+//			}else if(c>=97&&c<=122){
+//				max++;
+//			}
+//		}
+//		if(pe<3)return false;
+//		return max/(float)pe > 0.6;
 	}
 
 	@EventHandler

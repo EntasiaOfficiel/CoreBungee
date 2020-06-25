@@ -1,8 +1,8 @@
 package fr.entasia.corebungee.commands.base;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.ServerUtils;
-import fr.entasia.apis.TextUtils;
+import fr.entasia.apis.utils.TextUtils;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;

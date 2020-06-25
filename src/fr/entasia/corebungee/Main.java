@@ -1,6 +1,5 @@
 package fr.entasia.corebungee;
 
-import fr.entasia.apis.ChatComponent;
 import fr.entasia.apis.sql.SQLConnection;
 import fr.entasia.corebungee.antibot.SQLUpdate;
 import fr.entasia.corebungee.commands.base.*;
@@ -8,7 +7,7 @@ import fr.entasia.corebungee.commands.other.AntibotCmd;
 import fr.entasia.corebungee.commands.other.BotSyncCmd;
 import fr.entasia.corebungee.commands.troll.AdminCmd;
 import fr.entasia.corebungee.commands.troll.HeroCmd;
-import fr.entasia.corebungee.listeners.*;
+import fr.entasia.corebungee.listeners.Base;
 import fr.entasia.corebungee.listeners.SocketSpecials;
 import fr.entasia.corebungee.utils.BungeePlayer;
 import me.lucko.luckperms.LuckPerms;
@@ -31,7 +30,6 @@ import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import fr.entasia.corebungee.jda.JDABot;
 
 public class Main extends Plugin{
 

@@ -1,6 +1,6 @@
 package fr.entasia.corebungee.listeners;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.antibot.AntibotLevel;
 import fr.entasia.corebungee.antibot.Utils;

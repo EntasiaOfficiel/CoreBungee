@@ -1,9 +1,8 @@
 package fr.entasia.corebungee.utils;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.ProxyServer;
-import org.apache.logging.log4j.core.config.Scheduled;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,12 +1,10 @@
 package fr.entasia.corebungee.listeners;
 
-import fr.entasia.apis.ChatComponent;
+import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.apis.socket.SocketEvent;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.utils.BungeePlayer;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class SocketSpecials {
 
