@@ -1,7 +1,7 @@
 package fr.entasia.corebungee.commands.troll;
 
 import fr.entasia.apis.other.ChatComponent;
-import fr.entasia.apis.ServerUtils;
+import fr.entasia.apis.utils.ServerUtils;
 import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
