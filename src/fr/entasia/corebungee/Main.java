@@ -1,7 +1,6 @@
 package fr.entasia.corebungee;
 
 import fr.entasia.apis.sql.SQLConnection;
-import fr.entasia.corebungee.antibot.SQLUpdate;
 import fr.entasia.corebungee.commands.base.*;
 import fr.entasia.corebungee.commands.other.AntibotCmd;
 import fr.entasia.corebungee.commands.other.BotSyncCmd;
@@ -63,7 +62,7 @@ public class Main extends Plugin{
 			getLogger().info("Activation du plugin...");
 
 			sql = new SQLConnection("corebungee", "playerdata");
-			SQLUpdate.ps = sql.connection.prepareStatement("SELECT * from global.safelist");
+//			SQLUpdate.ps = sql.connection.prepareStatement("SELECT * from global.safelist");
 
 			getProxy().getPluginManager().registerCommand(this, new MsgCmd("msg"));
 			getProxy().getPluginManager().registerCommand(this, new WhoisCmd("whois"));
