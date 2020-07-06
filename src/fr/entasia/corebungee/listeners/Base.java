@@ -11,6 +11,8 @@ import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.manager.UserManager;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
@@ -18,8 +20,7 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 public class Base implements Listener {
 
@@ -87,9 +88,10 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void onKick(ServerKickEvent e) {
-		System.out.println(1);
+		System.out.println("Player kicked");
+		System.out.println(LoginUtils.logins.size());
 		if(LoginUtils.logins.contains(e.getPlayer().getName())){
-			System.out.println(2);
+			System.out.println("Player already Login");
 			e.setCancelled(true);
 			e.getPlayer().connect(Main.hubServer);
 			e.getPlayer().sendMessage(e.getKickReasonComponent());
@@ -101,6 +103,24 @@ public class Base implements Listener {
 			if (value.equals(i)) return true;
 		}
 		return false;
+	}
+
+	@EventHandler
+	public void serverPing(ProxyPingEvent e){
+		ServerPing serverPing = e.getResponse();
+		String line1 = Main.configuration.getString("motd1").replace("&","§");
+		String line2 = Main.configuration.getString("motd2").replace("&","§");
+		serverPing.setDescriptionComponent(new TextComponent(line1 +"\n"+line2));
+
+		ServerPing.PlayerInfo[] sample = new ServerPing.PlayerInfo[Main.main.getProxy().getPlayers().size()];
+		int i=0;
+		for (ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
+			sample[i] = new ServerPing.PlayerInfo(p.getDisplayName(), "");
+			i++;
+		}
+		serverPing.getPlayers().setMax(Main.maxPlayer);
+		serverPing.getPlayers().setSample(sample);
+		e.setResponse(serverPing);
 	}
 	
 	@EventHandler
@@ -146,6 +166,11 @@ public class Base implements Listener {
 					e.setCancelReason(ChatComponent.create("§cUne erreur est survenue lors du chargement de tes données ! Contacte un membre du Staff"));
 					return;
 				}
+			}
+
+			if(Main.main.getProxy().getPlayers().size() >= Main.maxPlayer){
+				e.setCancelled(true);
+				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint"));
 			}
 			if (Main.lockdown != null) {
 				if (!u.hasPermission(lockdownNode).asBoolean()) {

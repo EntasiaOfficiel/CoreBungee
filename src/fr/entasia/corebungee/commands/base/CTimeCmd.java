@@ -28,9 +28,9 @@ public class CTimeCmd extends Command {
 				String weekTime, monthTime, totalTime;
 
 				if(rs.next()){
-					weekTime = rs.getString(0);
-					monthTime = rs.getString(1);
-					totalTime = rs.getString(2);
+					weekTime = rs.getString(1);
+					monthTime = rs.getString(2);
+					totalTime = rs.getString(3);
 					sender.sendMessage(ChatComponent.create("§9Temps §8» : §7" + ((ProxiedPlayer)sender).getDisplayName()));
 					sender.sendMessage(ChatComponent.create("§7Temps de connexion hebdomadaire : " + weekTime));
 					sender.sendMessage(ChatComponent.create("§7Temps de connexion mensuel : " + monthTime));

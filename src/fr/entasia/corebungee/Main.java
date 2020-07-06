@@ -15,8 +15,11 @@ import me.lucko.luckperms.api.LuckPermsApi;
 import me.lucko.luckperms.api.User;
 import me.lucko.luckperms.api.caching.MetaData;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -51,6 +54,7 @@ public class Main extends Plugin{
 	public static Map<String, ProxiedPlayer> vanishs = new HashMap<>();
 	public static HashMap<String, BungeePlayer> playerCache = new HashMap<>();
 	public static List<UUID> staffchat = new ArrayList<>();
+	public static int maxPlayer = 75;
 
 
 	@Override
@@ -84,6 +88,9 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new HubCmd("lob"));
 			getProxy().getPluginManager().registerCommand(this, new HubCmd("lobby"));
 			getProxy().getPluginManager().registerCommand(this, new HubCmd("lob"));
+			getProxy().getPluginManager().registerCommand(this,new SendCmd("send"));
+			getProxy().getPluginManager().registerCommand(this, new ServerCmd("server"));
+			getProxy().getPluginManager().registerCommand(this, new FindCmd("find"));
 
 			getProxy().getPluginManager().registerCommand(this, new AntibotCmd("antibot"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botsync"));
@@ -91,6 +98,10 @@ public class Main extends Plugin{
 
 			getProxy().getPluginManager().registerCommand(this, new AdminCmd("admin"));
 			getProxy().getPluginManager().registerCommand(this, new HeroCmd("herobrine"));
+
+			getProxy().getPluginManager().registerCommand(this, new MotdCmd("setmotd"));
+			getProxy().getPluginManager().registerCommand(this, new MaxPlayerCmd("setmaxplayer"));
+
 
 
 			getProxy().getPluginManager().registerListener(this, new Base());
@@ -102,24 +113,16 @@ public class Main extends Plugin{
 			configFile = new File(getDataFolder(), "config.yml");
 
 			if (!configFile.exists()) {
-				try (InputStream in = getResourceAsStream("config.yml")) {
-					Files.copy(in, configFile.toPath());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				InputStream in = getResourceAsStream("config.yml");
+				Files.copy(in, configFile.toPath());
 			}
 			provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
-			try {
-				configuration = provider.load(configFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			configuration = provider.load(configFile);
 
 //			String token = configuration.getString("token");
 //			if(token!=null&&!token.equals(""))JDABot.init(token);
 
 			// FIN PARTIE FICHIER CONFIG
-
 			lockdown = configuration.getString("lockdown");
 			if (lockdown.equals("")) lockdown = null;
 
@@ -138,6 +141,13 @@ public class Main extends Plugin{
 			ProxyServer.getInstance().stop();
 		}
 	}
+
+	public static void updateMotd(String motd){
+		String line1 = configuration.getString("motd1").replace("&","§");
+		configuration.set("motd2", motd.replace("§","&"));
+	}
+
+
 
 	public static String getSuffix(ProxiedPlayer player) {
 		User user = lpAPI.getUser(player.getUniqueId());
