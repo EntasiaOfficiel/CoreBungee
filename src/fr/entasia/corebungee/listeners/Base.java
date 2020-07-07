@@ -7,9 +7,9 @@ import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.commands.base.StaffChatCmd;
 import fr.entasia.corebungee.utils.BungeePlayer;
-import me.lucko.luckperms.api.Node;
-import me.lucko.luckperms.api.User;
-import me.lucko.luckperms.api.manager.UserManager;
+import me.lucko.luckperms.common.model.manager.user.UserManager;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,10 +23,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class Base implements Listener {
-
-	private static final UserManager userManager = Main.lpAPI.getUserManager();
-	private static final Node lockdownNode = fr.entasia.sanctions.Main.lpAPI.buildNode("staff.lockdown.bypass").build();
-	private static final Node dnsVanishNode = fr.entasia.sanctions.Main.lpAPI.buildNode("mod.dnsvanish").build();
 
 	private final String[] cmdcompletes = {"ctime", "forcekick", "ipcheck", "join", "msg", "ping", "whois"};
 	@EventHandler
@@ -155,10 +151,10 @@ public class Base implements Listener {
 			}
 
 			UUID uuid = e.getConnection().getUniqueId();
-			User u = userManager.getUser(uuid);
+			User u = Main.lpAPI.getUserManager().getUser(uuid);
 			if (u == null) {
 				try {
-					u = userManager.loadUser(uuid).get();
+					u = Main.lpAPI.getUserManager().loadUser(uuid).get();
 					if (u == null) throw new Exception("Failed to load user data  : " + e.getConnection().getName());
 				} catch (Exception e2) {
 					e2.printStackTrace();
@@ -173,7 +169,7 @@ public class Base implements Listener {
 				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint"));
 			}
 			if (Main.lockdown != null) {
-				if (!u.hasPermission(lockdownNode).asBoolean()) {
+				if (hasPermission(u,"staff.lockdown.bypass")) {
 					e.setCancelled(true);
 					e.setCancelReason(ChatComponent.create(
 							"§cLe serveur est en maintenance ! §7"+Main.lockdown)
@@ -185,7 +181,7 @@ public class Base implements Listener {
 			}
 
 			if (e.getConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
-				if(u.hasPermission(dnsVanishNode).asBoolean()){
+				if(hasPermission(u, "mod.dnsvanish")){
 					if(Main.vanishs.containsKey(e.getConnection().getName())) {
 						e.setCancelled(true);
 						e.setCancelReason(ChatComponent.create("§cTu es déja en vanish ! Merci de te connecter via l'adresse play.entasia.fr"));
@@ -197,6 +193,8 @@ public class Base implements Listener {
 					return;
 				}
 			}
+
+			// SUITE DU CODE
 
 
 		}
@@ -279,5 +277,9 @@ public class Base implements Listener {
 				e2.printStackTrace();
 			}
 		}
+	}
+
+	private static boolean hasPermission(User u, String permission){
+		return u.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
 	}
 }

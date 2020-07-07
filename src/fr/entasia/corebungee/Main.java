@@ -9,11 +9,11 @@ import fr.entasia.corebungee.commands.troll.HeroCmd;
 import fr.entasia.corebungee.listeners.Base;
 import fr.entasia.corebungee.listeners.SocketSpecials;
 import fr.entasia.corebungee.utils.BungeePlayer;
-import me.lucko.luckperms.LuckPerms;
-import me.lucko.luckperms.api.Contexts;
-import me.lucko.luckperms.api.LuckPermsApi;
-import me.lucko.luckperms.api.User;
-import me.lucko.luckperms.api.caching.MetaData;
+import me.lucko.luckperms.common.cacheddata.type.MetaCache;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.model.user.User;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -35,7 +35,6 @@ import java.util.*;
 
 public class Main extends Plugin{
 
-
 	public static Random r = new Random();
 
 	public static Main main;
@@ -47,7 +46,7 @@ public class Main extends Plugin{
 	public static Configuration configuration;
 	public static File configFile;
 
-	public static LuckPermsApi lpAPI;
+	public static LuckPerms lpAPI;
 	public static ConfigurationProvider provider;
 
 	public static Map<UUID, String> msgs = new HashMap<>();
@@ -61,7 +60,7 @@ public class Main extends Plugin{
 	public void onEnable() {
 		try {
 			main = this;
-			lpAPI = LuckPerms.getApi();
+			lpAPI = LuckPermsProvider.get();
 			hubServer = getProxy().getServerInfo("hub");
 			getLogger().info("Activation du plugin...");
 
@@ -150,11 +149,10 @@ public class Main extends Plugin{
 
 
 	public static String getSuffix(ProxiedPlayer player) {
-		User user = lpAPI.getUser(player.getUniqueId());
+		User user = lpAPI.getUserManager().getUser(player.getUniqueId());
 		if(user==null)return "§7Inconnu";
 
-		Contexts contexts = lpAPI.getContextManager().getApplicableContexts(player);
-		MetaData metaData = user.getCachedData().getMetaData(contexts);
+		CachedMetaData metaData = user.getCachedData().getMetaData();
 
 		if(metaData.getSuffix()==null)return "";
 		else return metaData.getSuffix().replace("&", "§");

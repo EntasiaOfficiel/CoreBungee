@@ -7,9 +7,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="WaterFall" level="project" />
     <orderEntry type="library" name="Libraries" level="project" />
-    <orderEntry type="library" name="AdvancedBan" level="project" />
+    <orderEntry type="library" name="BungeeLogin" level="project" />
+    <orderEntry type="library" name="Sanctions" level="project" />
+    <orderEntry type="library" name="WaterFall" level="project" />
     <orderEntry type="library" name="LuckPerms-Bungee" level="project" />
   </component>
 </module>
