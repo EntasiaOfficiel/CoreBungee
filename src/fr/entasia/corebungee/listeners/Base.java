@@ -7,9 +7,7 @@ import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.commands.base.StaffChatCmd;
 import fr.entasia.corebungee.utils.BungeePlayer;
-import me.lucko.luckperms.common.model.manager.user.UserManager;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.Node;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -20,7 +18,8 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.UUID;
 
 public class Base implements Listener {
 
