@@ -15,7 +15,6 @@ public class MaxPlayersCmd extends Command {
     public MaxPlayersCmd(String name) {
         super(name);
         try{
-            System.out.println(Main.main.getProxy().getConfig().getClass());
             playerLimit = Main.main.getProxy().getConfig().getClass().getSuperclass().getDeclaredField("playerLimit");
             playerLimit.setAccessible(true);
         }catch(ReflectiveOperationException e){

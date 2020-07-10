@@ -16,21 +16,17 @@ public class ServerCmd extends Command {
     public void execute(CommandSender commandSender, String[] args) {
         if(commandSender instanceof ProxiedPlayer) {
             ProxiedPlayer p = (ProxiedPlayer) commandSender;
-            if(p.hasPermission("entasia.server")) {
+            if(p.hasPermission("bungee.server")) {
                 if(args.length == 1){
                     ServerInfo server = Main.main.getProxy().getServers().get(args[0]);
                     if(server == null){
-                        p.sendMessage(new ChatComponent("§cErreur : Serveur invalide").create());
+                        p.sendMessage(new ChatComponent("§cCe serveur est invalide !").create());
                     } else{
                         p.connect(server);
-                        p.sendMessage(new ChatComponent("§7Vous avez join le serveur "+server.getName()).create());
+                        p.sendMessage(new ChatComponent("§aTu as rejoint le serveur "+server.getName()).create());
                     }
-                }else{
-                p.sendMessage(new ChatComponent("§cSyntaxe : /server <server>").create());
-                }
-            }
+                }else  p.sendMessage(new ChatComponent("§cSyntaxe : /server <server>").create());
+            }else p.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
         }
-
-
     }
 }

@@ -16,24 +16,24 @@ public class SendCmd extends Command {
     public void execute(CommandSender commandSender, String[] args) {
         if(commandSender instanceof ProxiedPlayer){
             ProxiedPlayer p = (ProxiedPlayer) commandSender;
-            if(p.hasPermission("entasia.send")) {
+            if(p.hasPermission("bungee.send")) {
                 if(args.length == 2){
                     ProxiedPlayer player = Main.main.getProxy().getPlayer(args[0]);
                     if(player == null){
-                        p.sendMessage(new ChatComponent("§cErreur : Joueur invalide").create());
+                        p.sendMessage(ChatComponent.create("§cCe joueur est invalide !"));
                     } else{
-                        ServerInfo server = Main.main.getProxy().getServers().get(args[1]);
+                        ServerInfo server = Main.main.getProxy().getServerInfo(args[1]);
                         if(server == null){
-                            p.sendMessage(new ChatComponent("§cErreur : Serveur invalide").create());
+                            p.sendMessage(ChatComponent.create("§cCe serveur est invalide !"));
                         } else{
                             player.connect(server);
-                            //player.sendMessage(new ChatComponent("§7Vous avez été send au "+server.getName() +" par "+p.getDisplayName()).create());
+                            //player.sendMessage(new ChatComponent("§aTu as été envoyé au serveur §e"+server.getName() +"§a par §e"+p.getDisplayName()).create()+"§a !");
                         }
                     }
                 }else{
-                    p.sendMessage(new ChatComponent("§cSyntaxe : /send <player> <server>").create());
+                    p.sendMessage(ChatComponent.create("§cSyntaxe : /send <player> <server>"));
                 }
-            }
+            }else p.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
         }
     }
 }

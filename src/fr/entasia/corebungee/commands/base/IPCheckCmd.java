@@ -44,7 +44,7 @@ public class IPCheckCmd extends Command {
 					sender.sendMessage(ChatComponent.create("§aLes joueurs qui possèdent cette ip sont :"));
 					paccept.forEach(b -> sender.sendMessage(ChatComponent.create("§8- §7" + b.getDisplayName())));
 				}
-			} else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/whoisip <ip/pseudo>"));
+			} else sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/whoisip <ip/pseudo>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

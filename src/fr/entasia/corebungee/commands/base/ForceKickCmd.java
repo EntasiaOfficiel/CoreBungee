@@ -24,7 +24,7 @@ public class ForceKickCmd extends Command {
 					sender.sendMessage(ChatComponent.create("§7Kick §8» §7Vous avez kick " + args[0]));
 					kicked.disconnect(new TextComponent("§7Vous avez été kick du serveur !"));
 				}
-			}else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/forcekick <joueur>"));
+			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/forcekick <joueur>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

@@ -48,7 +48,7 @@ public class MsgCmd extends Command {
 					target.sendMessage(ChatComponent.create("§6MSG §8» §cConsole §3 -> " + Main.getSuffix(target) + "§b moi§7 | §f" + msg));
 				}
 			}
-		} else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/msg <joueur> <message>"));
+		} else sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/msg <joueur> <message>"));
 
 	}
 

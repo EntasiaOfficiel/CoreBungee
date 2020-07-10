@@ -84,12 +84,8 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new ReplyCmd("r"));
 			getProxy().getPluginManager().registerCommand(this, new ReplyCmd("reply"));
 			getProxy().getPluginManager().registerCommand(this, new AlertCmd("alert"));
-			getProxy().getPluginManager().registerCommand(this, new HubCmd("hub"));
-			getProxy().getPluginManager().registerCommand(this, new HubCmd("lobby"));
-			getProxy().getPluginManager().registerCommand(this, new HubCmd("lob"));
-			getProxy().getPluginManager().registerCommand(this, new HubCmd("lobby"));
-			getProxy().getPluginManager().registerCommand(this, new HubCmd("lob"));
-			getProxy().getPluginManager().registerCommand(this,new SendCmd("send"));
+			getProxy().getPluginManager().registerCommand(this, new HubCmd("hub", "lob", "lobb", "lobby"));
+			getProxy().getPluginManager().registerCommand(this, new SendCmd("send"));
 			getProxy().getPluginManager().registerCommand(this, new ServerCmd("server"));
 			getProxy().getPluginManager().registerCommand(this, new FindCmd("find"));
 

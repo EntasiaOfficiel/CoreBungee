@@ -17,7 +17,7 @@ public class HelpopCmd extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		if(!(sender instanceof ProxiedPlayer))return;
 		if(args.length==0)
-			sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/helpop <message>"));
+			sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/helpop <message>"));
 		else{
 			ProxiedPlayer p = (ProxiedPlayer) sender;
 			String msg = String.join(" ", args);

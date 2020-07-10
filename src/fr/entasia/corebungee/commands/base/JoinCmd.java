@@ -29,7 +29,7 @@ public class JoinCmd extends Command {
 						sender.sendMessage(ChatComponent.create("§dJoin §8» §7Vous avez rejoint le serveur de "+args[0]+" !"));
 					}
 				}
-			} else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/join <joueur>"));
+			} else sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/join <joueur>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

@@ -17,7 +17,7 @@ public class AlertCmd extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		if(sender.hasPermission("entasia.alert")) {
 			if(args.length==0)
-				sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/alert <message>"));
+				sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/alert <message>"));
 			else{
 				String msg = TextUtils.setColors(TextUtils.formatMessage(String.join(" ", args), ChatColor.GOLD));
 				Main.main.getProxy().broadcast(

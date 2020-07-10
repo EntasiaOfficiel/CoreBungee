@@ -31,14 +31,14 @@ public class Base implements Listener {
 		String line2 = Main.configuration.getString("motd2").replace("&","§");
 		serverPing.setDescriptionComponent(new TextComponent(line1 +"\n"+line2));
 
-		ServerPing.PlayerInfo[] sample = new ServerPing.PlayerInfo[Main.main.getProxy().getPlayers().size()];
+		ServerPing.PlayerInfo[] sample = new ServerPing.PlayerInfo[Main.main.getProxy().getOnlineCount()];
 		int i=0;
 		for (ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
 			sample[i] = new ServerPing.PlayerInfo(p.getDisplayName(), "");
 			i++;
 		}
 		serverPing.getPlayers().setSample(sample);
-		serverPing.getPlayers().setMax(i);
+		serverPing.getPlayers().setMax(Main.main.getProxy().getConfig().getPlayerLimit());
 		e.setResponse(serverPing);
 	}
 
@@ -55,11 +55,12 @@ public class Base implements Listener {
 					return;
 				}
 			}
-			if(Main.main.getProxy().getPlayers().size() >= Main.main.getProxy().getConfig().getPlayerLimit()){
-				e.setCancelled(true);
-				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint !"));
-				return;
-			}
+			System.out.println(Main.main.getProxy().getOnlineCount());
+//			if(Main.main.getProxy().getOnlineCount() >= Main.main.getProxy().getConfig().getPlayerLimit()){
+//				e.setCancelled(true);
+//				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint !"));
+//				return;
+//			}
 
 			UUID uuid = e.getConnection().getUniqueId();
 			User u = Main.lpAPI.getUserManager().getUser(uuid);
@@ -75,7 +76,7 @@ public class Base implements Listener {
 				}
 			}
 			if (Main.lockdown != null) {
-				if (hasPermission(u,"staff.lockdown.bypass")) {
+				if (!hasPermission(u,"staff.lockdown.bypass")) {
 					e.setCancelled(true);
 					e.setCancelReason(ChatComponent.create(
 							"§cLe serveur est en maintenance ! §7"+Main.lockdown)

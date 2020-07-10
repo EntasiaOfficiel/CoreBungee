@@ -20,7 +20,7 @@ public class ReplyCmd extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if(args.length == 0)
-			sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/"+cmd+" <message>"));
+			sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/"+cmd+" <message>"));
 		else {
 			if(sender instanceof ProxiedPlayer){
 				ProxiedPlayer player = (ProxiedPlayer)sender;

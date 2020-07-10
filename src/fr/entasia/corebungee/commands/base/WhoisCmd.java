@@ -41,7 +41,7 @@ public class WhoisCmd extends Command {
 					target.sendMessage(comp.create());
 					sender.sendMessage(ChatComponent.create("§bGrade : §a" + Main.getSuffix(target)));
 				}
-			}else sender.sendMessage(ChatComponent.create("§cSyntaxe §8» §c/forcekick <joueur>"));
+			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/forcekick <joueur>"));
 		}else sender.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
 	}
 }

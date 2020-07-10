@@ -8,8 +8,8 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class HubCmd extends Command {
 
-	public HubCmd(String name) {
-		super(name);
+	public HubCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	public void execute(CommandSender sender, String[] args) {

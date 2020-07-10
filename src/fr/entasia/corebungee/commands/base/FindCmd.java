@@ -15,18 +15,18 @@ public class FindCmd extends Command {
     public void execute(CommandSender commandSender, String[] args) {
         if(commandSender instanceof ProxiedPlayer) {
             ProxiedPlayer p = (ProxiedPlayer) commandSender;
-            if(p.hasPermission("entasia.find")) {
+            if(p.hasPermission("bungee.find")) {
                 if(args.length == 1){
                     ProxiedPlayer player = Main.main.getProxy().getPlayer(args[0]);
                     if(player == null){
-                        p.sendMessage(new ChatComponent("§cErreur : Joueur invalide").create());
+                        p.sendMessage(new ChatComponent("§cCe joueur est invalide !").create());
                     } else{
-                        p.sendMessage(new ChatComponent("§7" + args[0] + " se trouve sur le serveur "+player.getServer().getInfo().getName()).create());
+                        p.sendMessage(new ChatComponent("§a" + args[0] + " se trouve sur le serveur §e"+player.getServer().getInfo().getName()).create());
                     }
                 }else{
                     p.sendMessage(new ChatComponent("§cSyntaxe : /find <player>").create());
                 }
-            }
+            }else p.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
         }
 
     }
