@@ -1,6 +1,7 @@
 package fr.entasia.corebungee;
 
 import fr.entasia.apis.sql.SQLConnection;
+import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.commands.base.*;
 import fr.entasia.corebungee.commands.other.AntibotCmd;
 import fr.entasia.corebungee.commands.other.BotSyncCmd;
@@ -8,7 +9,9 @@ import fr.entasia.corebungee.commands.troll.AdminCmd;
 import fr.entasia.corebungee.commands.troll.HeroCmd;
 import fr.entasia.corebungee.listeners.Base;
 import fr.entasia.corebungee.listeners.SocketSpecials;
+import fr.entasia.corebungee.listeners.TabChat;
 import fr.entasia.corebungee.utils.BungeePlayer;
+import io.github.waterfallmc.waterfall.conf.WaterfallConfiguration;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
@@ -35,9 +38,12 @@ public class Main extends Plugin{
 
 	public static Main main;
 	public static boolean joinquit=true;
+	public static boolean dev;
 	public static String lockdown;
 	public static SQLConnection sql;
+
 	public static ServerInfo hubServer;
+	public static ServerInfo loginServer;
 
 	public static Configuration configuration;
 	public static File configFile;
@@ -49,19 +55,19 @@ public class Main extends Plugin{
 	public static Map<String, ProxiedPlayer> vanishs = new HashMap<>();
 	public static HashMap<String, BungeePlayer> playerCache = new HashMap<>();
 	public static List<UUID> staffchat = new ArrayList<>();
-	public static int maxPlayer = 75;
+
+	public static boolean loginModule;
 
 
 	@Override
 	public void onEnable() {
 		try {
+			getLogger().info("Activation du plugin...");
 			main = this;
 			lpAPI = LuckPermsProvider.get();
+			hubServer = getProxy().getServerInfo("login");
 			hubServer = getProxy().getServerInfo("hub");
-			getLogger().info("Activation du plugin...");
-
-			sql = new SQLConnection("corebungee", "playerdata");
-//			SQLUpdate.ps = sql.connection.prepareStatement("SELECT * from global.safelist");
+			loginModule = getProxy().getPluginManager().getPlugin("BungeeLogin")!=null;
 
 			getProxy().getPluginManager().registerCommand(this, new MsgCmd("msg"));
 			getProxy().getPluginManager().registerCommand(this, new WhoisCmd("whois"));
@@ -95,11 +101,12 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new HeroCmd("herobrine"));
 
 			getProxy().getPluginManager().registerCommand(this, new MotdCmd("setmotd"));
-			getProxy().getPluginManager().registerCommand(this, new MaxPlayerCmd("setmaxplayer"));
+			getProxy().getPluginManager().registerCommand(this, new MaxPlayersCmd("setmaxplayers"));
 
 
 
 			getProxy().getPluginManager().registerListener(this, new Base());
+			getProxy().getPluginManager().registerListener(this, new TabChat());
 
 			// PARTIE FICHIER CONFIG
 			if (!getDataFolder().exists()) {
@@ -114,20 +121,25 @@ public class Main extends Plugin{
 			provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
 			configuration = provider.load(configFile);
 
-//			String token = configuration.getString("token");
-//			if(token!=null&&!token.equals(""))JDABot.init(token);
 
-			// FIN PARTIE FICHIER CONFIG
+			dev = configuration.getBoolean("dev", false);
+
 			lockdown = configuration.getString("lockdown");
 			if (lockdown.equals("")) lockdown = null;
 
 
-			ResultSet rs = sql.connection.prepareStatement("SELECT * from global.vanishs").executeQuery();
-			while(rs.next()){
-				vanishs.put(rs.getString("name"), null);
-			}
+			// SQL
+			if(!dev){
+				sql = new SQLConnection("corebungee", "playerdata");
+				ResultSet rs = sql.connection.prepareStatement("SELECT * from global.vanishs").executeQuery();
+				while(rs.next()){
+					vanishs.put(rs.getString("name"), null);
+				}
 
-			SocketSpecials.init();
+				SocketSpecials.init();
+			}
+//			SQLUpdate.ps = sql.connection.prepareStatement("SELECT * from global.safelist");
+
 
 			getLogger().info("Plugin activé !");
 		}catch(Throwable e){
@@ -180,16 +192,24 @@ public class Main extends Plugin{
 		if(bp==null){
 			bp = new BungeePlayer();
 			playerCache.put(name, bp);
-			try{
-				ResultSet rs = sql.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", name);
-				if(rs.next()){
+			if(!dev){
+				try{
+					ResultSet rs = sql.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", name);
+					if(rs.next()){
 
+					}
+				}catch(SQLException e){
+					e.printStackTrace();
+					sql.broadcastError();
 				}
-			}catch(SQLException e){
-				e.printStackTrace();
-				sql.broadcastError();
 			}
 		}
 		return bp;
+	}
+
+	public static boolean isLogin(String name){
+		if(loginModule){
+			return LoginUtils.logins.contains(name);
+		}else return true;
 	}
 }

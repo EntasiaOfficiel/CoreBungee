@@ -2,4 +2,4 @@ name: CoreBungee
 version: '-1'
 author: Stargeyt, iTrooz_
 main: fr.entasia.corebungee.Main
-depends: [Libraries, LuckPerms, Sanctions, BungeeLogin]
+depends: [Libraries, LuckPerms, Sanctions]

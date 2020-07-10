@@ -3,11 +3,12 @@ package fr.entasia.corebungee.listeners;
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.apis.utils.ServerUtils;
-import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.Main;
+import fr.entasia.corebungee.commands.base.MaxPlayersCmd;
 import fr.entasia.corebungee.commands.base.StaffChatCmd;
 import fr.entasia.corebungee.utils.BungeePlayer;
 import net.luckperms.api.model.user.User;
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,83 +24,6 @@ import java.util.UUID;
 
 public class Base implements Listener {
 
-	private final String[] cmdcompletes = {"ctime", "forcekick", "ipcheck", "join", "msg", "ping", "whois"};
-	@EventHandler
-	public void onChat(ChatEvent e){
-		if(e.getSender() instanceof ProxiedPlayer&&!e.isCommand()) {
-			ProxiedPlayer p = (ProxiedPlayer)e.getSender();
-			BungeePlayer bp = Main.getPlayer(p.getName());
-
-			if(e.getMessage().startsWith(".sync")) {
-				p.sendMessage(ChatComponent.create("§cCette commande doit s'éxecuter sur discord ! Fait §4/discord§c pour avoir le lien"));
-				return;
-			}
-
-			if(bp.sentSince()>450){
-				if (Main.staffchat.contains(p.getUniqueId())) {
-					if(p.hasPermission("staff.staffchat")){
-						e.setCancelled(true);
-						StaffChatCmd.staffchatTalk(p, e.getMessage());
-					}else{
-						Main.staffchat.remove(p.getUniqueId());
-					}
-				}else{
-					if(bp.lastmsg.equals(e.getMessage())&&bp.sentSince()<5000){
-						p.sendMessage(ChatComponent.create("§cNe spam pas !"));
-						e.setCancelled(true);
-					}else{
-						if(checkMajs(e.getMessage())){
-							p.sendMessage(ChatComponent.create("§cAttention à l'abus de majuscules dans ton message !"));
-							e.setMessage(e.getMessage().toLowerCase());
-						}
-
-						// on est good
-						bp.lastsentmsg = new Date().getTime();
-						bp.lastmsg = e.getMessage();
-					}
-				}
-			}else{
-				p.sendMessage(ChatComponent.create("§cHép ! Attend un peu avant de d'envoyer de nouveau un message !"));
-				e.setCancelled(true);
-			}
-		}
-	}
-	public static boolean checkMajs(String msg){
-		return false;
-//		if(msg.length()<4)return false;
-//		int pe = 0;
-//		int max = 0;
-//		for(char c : msg.toCharArray()){
-//			if(c>=65&&c<=90){
-//				pe++;
-//				max++;
-//			}else if(c>=97&&c<=122){
-//				max++;
-//			}
-//		}
-//		if(pe<3)return false;
-//		return max/(float)pe > 0.6;
-	}
-
-	@EventHandler
-	public void onKick(ServerKickEvent e) {
-		System.out.println("Player kicked");
-		System.out.println(LoginUtils.logins.size());
-		if(LoginUtils.logins.contains(e.getPlayer().getName())){
-			System.out.println("Player already Login");
-			e.setCancelled(true);
-			e.getPlayer().connect(Main.hubServer);
-			e.getPlayer().sendMessage(e.getKickReasonComponent());
-		}
-	}
-
-	private boolean isTabCmd(String value) {
-		for (String i : cmdcompletes) {
-			if (value.equals(i)) return true;
-		}
-		return false;
-	}
-
 	@EventHandler
 	public void serverPing(ProxyPingEvent e){
 		ServerPing serverPing = e.getResponse();
@@ -113,26 +37,9 @@ public class Base implements Listener {
 			sample[i] = new ServerPing.PlayerInfo(p.getDisplayName(), "");
 			i++;
 		}
-		serverPing.getPlayers().setMax(Main.maxPlayer);
 		serverPing.getPlayers().setSample(sample);
+		serverPing.getPlayers().setMax(i);
 		e.setResponse(serverPing);
-	}
-	
-	@EventHandler
-	public void onTabComplete(TabCompleteEvent e) {
-		String[] a = e.getCursor().split(" ");
-		if(a[0].length()>1&&isTabCmd(a[0].substring(1).toLowerCase())){
-			if(a.length>1){
-				a[1] = a[1].toLowerCase();
-				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
-					if(p.getDisplayName().toLowerCase().startsWith(a[1]))e.getSuggestions().add(p.getDisplayName());
-				}
-			}else{
-				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
-					e.getSuggestions().add(p.getDisplayName());
-				}
-			}
-		}
 	}
 
 	@EventHandler
@@ -148,6 +55,11 @@ public class Base implements Listener {
 					return;
 				}
 			}
+			if(Main.main.getProxy().getPlayers().size() >= Main.main.getProxy().getConfig().getPlayerLimit()){
+				e.setCancelled(true);
+				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint !"));
+				return;
+			}
 
 			UUID uuid = e.getConnection().getUniqueId();
 			User u = Main.lpAPI.getUserManager().getUser(uuid);
@@ -161,11 +73,6 @@ public class Base implements Listener {
 					e.setCancelReason(ChatComponent.create("§cUne erreur est survenue lors du chargement de tes données ! Contacte un membre du Staff"));
 					return;
 				}
-			}
-
-			if(Main.main.getProxy().getPlayers().size() >= Main.maxPlayer){
-				e.setCancelled(true);
-				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint"));
 			}
 			if (Main.lockdown != null) {
 				if (hasPermission(u,"staff.lockdown.bypass")) {
@@ -204,7 +111,6 @@ public class Base implements Listener {
 		else if(c>=65&&c<=90) return false;
 		else if(c>=48&&c<=57) return false;
 		else return c != 95;
-
 	}
 
 	@EventHandler
@@ -264,19 +170,39 @@ public class Base implements Listener {
 			int time = (int) (new Date().getTime() - bp.lastjointime)/1000;
 			bp.lastjointime = 0;
 			bp.connectedtime += time;
-			Main.sql.checkConnect();
-			try{
-				PreparedStatement a = Main.sql.connection.prepareStatement("UPDATE playerdata.global SET time_week=time_week+?, time_month=time_month+?, time_total=time_total+? WHERE uuid=?");
-				a.setInt(1, time);
-				a.setInt(2, time);
-				a.setInt(3, time);
-				a.setString(4, e.getPlayer().getUniqueId().toString());
-				a.execute();
-			}catch(SQLException e2){
-				e2.printStackTrace();
+
+			if(!Main.dev){
+				Main.sql.checkConnect();
+				try{
+					PreparedStatement a = Main.sql.connection.prepareStatement("UPDATE playerdata.global SET time_week=time_week+?, time_month=time_month+?, time_total=time_total+? WHERE uuid=?");
+					a.setInt(1, time);
+					a.setInt(2, time);
+					a.setInt(3, time);
+					a.setString(4, e.getPlayer().getUniqueId().toString());
+					a.execute();
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
 			}
 		}
 	}
+
+	@EventHandler
+	public void onKick(ServerKickEvent e) {
+		if(Main.isLogin(e.getPlayer().getName())){
+			if(e.getCause()==ServerKickEvent.Cause.SERVER){
+				e.setCancelled(true);
+				if(e.getPlayer().getServer().getInfo()==Main.hubServer){
+					e.getPlayer().disconnect(ChatComponent.create("§cLe serveur Lobby vient de s'arrêter !"));
+				}else{
+					e.getPlayer().connect(Main.hubServer);
+					e.getPlayer().sendMessage(ChatComponent.create("§cTu as été exclu du serveur ou tu étais ! Raison :"));
+					e.getPlayer().sendMessage(e.getKickReasonComponent());
+				}
+			}
+		}
+	}
+
 
 	private static boolean hasPermission(User u, String permission){
 		return u.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
