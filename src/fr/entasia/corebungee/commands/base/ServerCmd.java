@@ -25,8 +25,8 @@ public class ServerCmd extends Command implements TabExecutor {
                     if(server == null){
                         p.sendMessage(new ChatComponent("§cCe serveur est invalide !").create());
                     } else{
-                        p.connect(server);
                         p.sendMessage(new ChatComponent("§aTu as rejoint le serveur "+server.getName()).create());
+                        p.connect(server);
                     }
                 }else  p.sendMessage(new ChatComponent("§cSyntaxe : /server <server>").create());
             }else p.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
