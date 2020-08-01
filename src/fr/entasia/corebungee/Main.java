@@ -3,7 +3,6 @@ package fr.entasia.corebungee;
 import fr.entasia.apis.sql.SQLConnection;
 import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.commands.base.*;
-import fr.entasia.corebungee.commands.other.AntibotCmd;
 import fr.entasia.corebungee.commands.other.BotSyncCmd;
 import fr.entasia.corebungee.commands.troll.AdminCmd;
 import fr.entasia.corebungee.commands.troll.HeroCmd;
@@ -11,7 +10,6 @@ import fr.entasia.corebungee.listeners.Base;
 import fr.entasia.corebungee.listeners.SocketSpecials;
 import fr.entasia.corebungee.listeners.TabChat;
 import fr.entasia.corebungee.utils.BungeePlayer;
-import io.github.waterfallmc.waterfall.conf.WaterfallConfiguration;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
@@ -89,7 +87,6 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new ServerCmd("server"));
 			getProxy().getPluginManager().registerCommand(this, new FindCmd("find"));
 
-			getProxy().getPluginManager().registerCommand(this, new AntibotCmd("antibot"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botsync"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botlink"));
 

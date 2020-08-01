@@ -16,7 +16,7 @@ public class GLockCmd extends Command {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(sender.hasPermission("entasia.glockdown.use")) {
+		if(sender.hasPermission("staff.lockdown.use")) {
 			if (args.length != 0 && (args[0].equals("status") || args[0].equals("statut"))) {
 				if (Main.lockdown == null)
 					sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §6Actuellement §cDésactivé§6 !"));
