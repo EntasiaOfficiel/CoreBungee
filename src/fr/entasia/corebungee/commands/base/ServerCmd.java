@@ -6,8 +6,11 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 
-public class ServerCmd extends Command {
+import java.util.ArrayList;
+
+public class ServerCmd extends Command implements TabExecutor {
     public ServerCmd(String name) {
         super(name);
     }
@@ -28,5 +31,19 @@ public class ServerCmd extends Command {
                 }else  p.sendMessage(new ChatComponent("§cSyntaxe : /server <server>").create());
             }else p.sendMessage(ChatComponent.create("§cTu n'as pas accès à cette commande !"));
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        if(args.length==1){
+            ArrayList<String> comp = new ArrayList<>();
+            args[0] = args[0].toLowerCase();
+            for(String server : Main.main.getProxy().getServersCopy().keySet()){
+                if(server.toLowerCase().startsWith(args[0])){
+                    comp.add(server);
+                }
+            }
+            return comp;
+        }else return null;
     }
 }
