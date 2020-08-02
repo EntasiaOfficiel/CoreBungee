@@ -9,6 +9,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ServerCmd extends Command implements TabExecutor {
     public ServerCmd(String name) {
@@ -35,15 +36,15 @@ public class ServerCmd extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        ArrayList<String> comp = new ArrayList<>();
         if(args.length==1){
-            ArrayList<String> comp = new ArrayList<>();
             args[0] = args[0].toLowerCase();
             for(String server : Main.main.getProxy().getServersCopy().keySet()){
                 if(server.toLowerCase().startsWith(args[0])){
                     comp.add(server);
                 }
             }
-            return comp;
-        }else return null;
+        }
+        return comp;
     }
 }

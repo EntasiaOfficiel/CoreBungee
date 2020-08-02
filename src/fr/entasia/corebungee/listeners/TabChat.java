@@ -16,7 +16,7 @@ import java.util.Date;
 public class TabChat implements Listener {
 
 
-	private final String[] cmdcompletes = {"ctime", "forcekick", "ipcheck", "join", "msg", "ping", "whois"};
+	private final String[] cmdcompletes = {"ctime", "forcekick", "ipcheck", "join", "msg", "ping", "whois", "find"};
 	@EventHandler
 	public void onChat(ChatEvent e){
 		if(e.getSender() instanceof ProxiedPlayer &&!e.isCommand()) {
