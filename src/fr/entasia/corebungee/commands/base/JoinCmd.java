@@ -16,7 +16,7 @@ public class JoinCmd extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof ProxiedPlayer))return;
-		if (sender.hasPermission("entasia.join")) {
+		if (sender.hasPermission("bungee.join")) {
 			if (args.length == 1) {
 				ProxiedPlayer to = Main.main.getProxy().getPlayer(args[0]);
 				if (to==null) sender.sendMessage(ChatComponent.create("§cErreur : " + args[0] + " n'est pas connecté ou n'existe pas!"));
