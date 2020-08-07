@@ -195,6 +195,7 @@ public class Base implements Listener {
 				e.setCancelled(true);
 				if(e.getPlayer().getServer().getInfo()==Main.hubServer){
 					e.getPlayer().disconnect(ChatComponent.create("§cLe serveur Lobby vient de s'arrêter !"));
+					System.out.println("kicked for "+e.getKickReason());
 				}else{
 					e.getPlayer().connect(Main.hubServer);
 					e.getPlayer().sendMessage(ChatComponent.create("§cTu as été exclu du serveur ou tu étais ! Raison :"));
