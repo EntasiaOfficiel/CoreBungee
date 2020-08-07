@@ -55,7 +55,6 @@ public class Base implements Listener {
 					return;
 				}
 			}
-			System.out.println(Main.main.getProxy().getOnlineCount());
 //			if(Main.main.getProxy().getOnlineCount() >= Main.main.getProxy().getConfig().getPlayerLimit()){
 //				e.setCancelled(true);
 //				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint !"));
@@ -193,7 +192,7 @@ public class Base implements Listener {
 		if(Main.isLogin(e.getPlayer().getName())){
 			if(e.getCause()==ServerKickEvent.Cause.SERVER){
 				e.setCancelled(true);
-				if(e.getPlayer().getServer().getInfo()==Main.hubServer){
+				if(e.getCancelServer()==Main.hubServer){
 					e.getPlayer().disconnect(ChatComponent.create("§cLe serveur Lobby vient de s'arrêter !"));
 					System.out.println("kicked for "+e.getKickReason());
 				}else{
