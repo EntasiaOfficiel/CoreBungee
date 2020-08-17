@@ -2,11 +2,10 @@ package fr.entasia.corebungee.listeners;
 
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.corebungee.Main;
-import fr.entasia.corebungee.commands.base.StaffChatCmd;
+import fr.entasia.corebungee.commands.staff.StaffChatCmd;
 import fr.entasia.corebungee.utils.BungeePlayer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;

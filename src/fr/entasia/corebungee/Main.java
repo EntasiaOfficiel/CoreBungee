@@ -4,6 +4,7 @@ import fr.entasia.apis.sql.SQLConnection;
 import fr.entasia.bungeelogin.LoginUtils;
 import fr.entasia.corebungee.commands.base.*;
 import fr.entasia.corebungee.commands.other.BotSyncCmd;
+import fr.entasia.corebungee.commands.staff.*;
 import fr.entasia.corebungee.commands.troll.AdminCmd;
 import fr.entasia.corebungee.commands.troll.HeroCmd;
 import fr.entasia.corebungee.listeners.Base;
@@ -86,6 +87,7 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new SendCmd("send"));
 			getProxy().getPluginManager().registerCommand(this, new ServerCmd("server"));
 			getProxy().getPluginManager().registerCommand(this, new FindCmd("find"));
+			getProxy().getPluginManager().registerCommand(this, new DiscordCmd("dis", "discord"));
 
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botsync"));
 			getProxy().getPluginManager().registerCommand(this, new BotSyncCmd("botlink"));

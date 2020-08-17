@@ -1,4 +1,4 @@
-package fr.entasia.corebungee.commands.base;
+package fr.entasia.corebungee.commands.staff;
 
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.utils.TextUtils;
