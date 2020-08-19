@@ -1,11 +1,13 @@
 package fr.entasia.corebungee.listeners;
 
+import fr.entasia.antibot.AntibotAPI;
 import fr.entasia.apis.other.ChatComponent;
 import fr.entasia.apis.socket.SocketClient;
 import fr.entasia.apis.utils.ServerUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.utils.BungeePlayer;
 import net.luckperms.api.model.user.User;
+import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,6 +25,7 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void serverPing(ProxyPingEvent e){
+		if(Main.antibotModule&&AntibotAPI.isActive())return;
 		ServerPing serverPing = e.getResponse();
 		String line1 = Main.configuration.getString("motd1").replace("&","§");
 		String line2 = Main.configuration.getString("motd2").replace("&","§");
@@ -41,7 +44,8 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void onLogin(LoginEvent e) {
-		if(e.getConnection().getVersion()<110) { // 1.9.4
+		if(e.isCancelled())return;
+		if(!Main.dev&&e.getConnection().getVersion()<110) { // 1.9.4
 			e.setCancelled(true);
 			e.setCancelReason(ChatComponent.create("§cDésolé, nous n'acceptons plus les versions inférieures à la 1.9.4 !"));
 		}else {
@@ -144,6 +148,7 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void onLeave(PlayerDisconnectEvent e) {
+		if(e.getPlayer().getGroups().contains("bot"))return;
 		BungeePlayer bp = Main.getPlayer(e.getPlayer().getName());
 
 		StringBuilder sb = new StringBuilder();
@@ -188,8 +193,10 @@ public class Base implements Listener {
 	public void onKick(ServerKickEvent e) {
 		if(Main.isLogin(e.getPlayer().getName())){
 			if(e.getCause()==ServerKickEvent.Cause.SERVER){
+				System.out.println(e.getKickedFrom());
+				System.out.println(e.getCancelServer());
 				e.setCancelled(true);
-				if(e.getCancelServer()==Main.hubServer){
+				if(e.getKickedFrom()==Main.hubServer){
 					e.getPlayer().disconnect(ChatComponent.create("§cLe serveur Lobby vient de s'arrêter !"));
 					System.out.println("kicked for "+e.getKickReason());
 				}else{

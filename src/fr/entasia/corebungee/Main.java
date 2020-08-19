@@ -55,7 +55,7 @@ public class Main extends Plugin{
 	public static HashMap<String, BungeePlayer> playerCache = new HashMap<>();
 	public static List<UUID> staffchat = new ArrayList<>();
 
-	public static boolean loginModule;
+	public static boolean loginModule, antibotModule;
 
 
 	@Override
@@ -67,6 +67,7 @@ public class Main extends Plugin{
 			hubServer = getProxy().getServerInfo("login");
 			hubServer = getProxy().getServerInfo("hub");
 			loginModule = getProxy().getPluginManager().getPlugin("BungeeLogin")!=null;
+			antibotModule = getProxy().getPluginManager().getPlugin("AntiBot")!=null;
 
 			getProxy().getPluginManager().registerCommand(this, new MsgCmd("msg"));
 			getProxy().getPluginManager().registerCommand(this, new WhoisCmd("whois"));
@@ -187,17 +188,6 @@ public class Main extends Plugin{
 		if(bp==null){
 			bp = new BungeePlayer();
 			playerCache.put(name, bp);
-			if(!dev){
-				try{
-					ResultSet rs = sql.fastSelectUnsafe("SELECT discord_id FROM global WHERE name=?", name);
-					if(rs.next()){
-
-					}
-				}catch(SQLException e){
-					e.printStackTrace();
-					sql.broadcastError();
-				}
-			}
 		}
 		return bp;
 	}
