@@ -7,7 +7,6 @@ import fr.entasia.apis.utils.ServerUtils;
 import fr.entasia.corebungee.Main;
 import fr.entasia.corebungee.utils.BungeePlayer;
 import net.luckperms.api.model.user.User;
-import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -192,15 +191,17 @@ public class Base implements Listener {
 	@EventHandler
 	public void onKick(ServerKickEvent e) {
 		if(Main.isLogin(e.getPlayer().getName())){
-			if(e.getCause()==ServerKickEvent.Cause.SERVER){
+			if(e.getCause()==ServerKickEvent.Cause.SERVER&&e.getState()==ServerKickEvent.State.CONNECTED){
+				System.out.println(e.getCause());
+				System.out.println(e.getState());
 				System.out.println(e.getKickedFrom());
 				System.out.println(e.getCancelServer());
 				e.setCancelled(true);
 				if(e.getKickedFrom()==Main.hubServer){
-					e.getPlayer().disconnect(ChatComponent.create("§cLe serveur Lobby vient de s'arrêter !"));
+					e.getPlayer().disconnect(ChatComponent.create("§cLe Lobby vient de s'arrêter !"));
 					System.out.println("kicked for "+e.getKickReason());
 				}else{
-					e.getPlayer().connect(Main.hubServer);
+					e.setCancelServer(Main.hubServer);
 					e.getPlayer().sendMessage(ChatComponent.create("§cTu as été exclu du serveur ou tu étais ! Raison :"));
 					e.getPlayer().sendMessage(e.getKickReasonComponent());
 				}

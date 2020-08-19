@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public class Main extends Plugin{

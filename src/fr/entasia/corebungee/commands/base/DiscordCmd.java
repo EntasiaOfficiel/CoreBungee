@@ -1,10 +1,8 @@
 package fr.entasia.corebungee.commands.base;
 
 import fr.entasia.apis.other.ChatComponent;
-import fr.entasia.corebungee.Main;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 public class DiscordCmd extends Command {
