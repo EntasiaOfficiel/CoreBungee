@@ -29,7 +29,7 @@ public class PingCmd extends Command {
 		}else{
 			ProxiedPlayer target = Main.main.getProxy().getPlayer(args[0]);
 			if(target==null)
-				sender.sendMessage(ChatComponent.create("§7Kick §8» §7"+args[0]+" n'existe pas ou n'est pas connecté !"));
+				sender.sendMessage(ChatComponent.create("§c"+args[0]+" n'existe pas ou n'est pas connecté !"));
 			else
 				sender.sendMessage(ChatComponent.create("§6Ping actuel de §3"+args[0]+" §6 : "+ping(target.getPing())));
 		}

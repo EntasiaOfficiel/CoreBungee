@@ -43,67 +43,69 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void onLogin(LoginEvent e) {
-		if(e.isCancelled())return;
-		if(!Main.dev&&e.getConnection().getVersion()<110) { // 1.9.4
+		if (e.isCancelled()) return;
+		if (!Main.dev && e.getConnection().getVersion() < 110) { // 1.9.4
 			e.setCancelled(true);
 			e.setCancelReason(ChatComponent.create("§cDésolé, nous n'acceptons plus les versions inférieures à la 1.9.4 !"));
-		}else {
-			for(char c : e.getConnection().getName().toCharArray()){
-				if(charCheck(c)) {
-					e.setCancelled(true);
-					e.setCancelReason(ChatComponent.create("Caractère invalide dans ton pseudo : " + e.getConnection().getName()));
-					return;
-				}
+			return;
+		}
+		for (char c : e.getConnection().getName().toCharArray()) {
+			if (charCheck(c)) {
+				e.setCancelled(true);
+				e.setCancelReason(ChatComponent.create("Caractère invalide dans ton pseudo : " + e.getConnection().getName()));
+				return;
 			}
+		}
 //			if(Main.main.getProxy().getOnlineCount() >= Main.main.getProxy().getConfig().getPlayerLimit()){
 //				e.setCancelled(true);
 //				e.setCancelReason(ChatComponent.create("§cLe nombre de joueur maximum est déjà atteint !"));
 //				return;
 //			}
 
-			UUID uuid = e.getConnection().getUniqueId();
-			User u = Main.lpAPI.getUserManager().getUser(uuid);
-			if (u == null) {
-				try {
-					u = Main.lpAPI.getUserManager().loadUser(uuid).get();
-					if (u == null) throw new Exception("Failed to load user data  : " + e.getConnection().getName());
-				} catch (Exception e2) {
-					e2.printStackTrace();
-					e.setCancelled(true);
-					e.setCancelReason(ChatComponent.create("§cUne erreur est survenue lors du chargement de tes données ! Contacte un membre du Staff"));
-					return;
-				}
+		UUID uuid = e.getConnection().getUniqueId();
+		User u = Main.lpAPI.getUserManager().getUser(uuid);
+		if (u == null) {
+			try {
+				u = Main.lpAPI.getUserManager().loadUser(uuid).get();
+				if (u == null) throw new Exception("Failed to load user data  : " + e.getConnection().getName());
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				e.setCancelled(true);
+				e.setCancelReason(ChatComponent.create("§cUne erreur est survenue lors du chargement de tes données ! Contacte un membre du Staff"));
+				return;
 			}
-			if (Main.lockdown != null) {
-				if (!hasPermission(u,"staff.lockdown.bypass")) {
-					e.setCancelled(true);
-					e.setCancelReason(ChatComponent.create(
-							"§cLe serveur est en maintenance ! §7"+Main.lockdown)
-					);
-					ServerUtils.permMsg("log.lockdownjoin",
-							"§c§lGlobal §cLockdown : "+e.getConnection().getName()+" à essayé de rejoindre le serveur en Lockdown !");
-					return;
-				}
-			}
-
-			if (e.getConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
-				if(hasPermission(u, "mod.dnsvanish")){
-					if(Main.vanishs.containsKey(e.getConnection().getName())) {
-						e.setCancelled(true);
-						e.setCancelReason(ChatComponent.create("§cTu es déja en vanish ! Merci de te connecter via l'adresse play.entasia.fr"));
-						return;
-					}
-				}else{
-					e.setCancelled(true);
-					e.setCancelReason(ChatComponent.create("§cMerci de te connecter via l'adresse play.entasia.fr !"));
-					return;
-				}
-			}
-
-			// SUITE DU CODE
-
-
 		}
+		if (Main.lockdown != null) {
+			if (!hasPermission(u, "staff.lockdown.bypass")) {
+				e.setCancelled(true);
+				e.setCancelReason(ChatComponent.create(
+						"§cLe serveur est en maintenance ! §7" + Main.lockdown)
+				);
+				ServerUtils.permMsg("log.lockdownjoin",
+						"§c§lGlobal §cLockdown : " + e.getConnection().getName() + " à essayé de rejoindre le serveur en Lockdown !");
+				return;
+			}
+		}
+
+		if (e.getConnection().getVirtualHost().getHostString().equals("vanish.entasia.fr")) {
+			if (hasPermission(u, "mod.dnsvanish")) {
+				if (Main.vanishs.containsKey(e.getConnection().getName())) {
+					e.setCancelled(true);
+					e.setCancelReason(ChatComponent.create("§cTu es déja en vanish ! Merci de te connecter via l'adresse play.entasia.fr"));
+					return;
+				}
+			} else {
+				e.setCancelled(true);
+				e.setCancelReason(ChatComponent.create("§cMerci de te connecter via l'adresse play.entasia.fr !"));
+				return;
+			}
+		}
+
+		// SUITE DU CODE
+
+
+		System.out.println("login end");
+
 	}
 
 	public boolean charCheck(char c){
@@ -115,6 +117,7 @@ public class Base implements Listener {
 
 	@EventHandler
 	public void onPostLogin(PostLoginEvent e){
+		System.out.println("postlogin start");
 		BungeePlayer bp = Main.getPlayer(e.getPlayer().getName());
 		bp.p = e.getPlayer();
 
@@ -137,7 +140,8 @@ public class Base implements Listener {
 		bp.lastjointime = new Date().getTime();
 		StringBuilder sb = new StringBuilder();
 		for(ProxiedPlayer lp : ProxyServer.getInstance().getPlayers())sb.append(" ").append(lp.getName());
-		if(sb.length()!=0)SocketClient.sendData("players "+sb.toString().substring(1));
+		if(sb.length()!=0)SocketClient.sendData("players "+ sb.substring(1));
+		System.out.println("postlogin stop");
 	}
 
 	public static void vanishMsg(ProxiedPlayer p){
