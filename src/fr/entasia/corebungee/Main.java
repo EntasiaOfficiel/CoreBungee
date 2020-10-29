@@ -79,7 +79,7 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new HelpopCmd("helpop"));
 			getProxy().getPluginManager().registerCommand(this, new IPCheckCmd("ipcheck"));
 			getProxy().getPluginManager().registerCommand(this, new JoinCmd("join"));
-			getProxy().getPluginManager().registerCommand(this, new StaffChatCmd("s"));
+			getProxy().getPluginManager().registerCommand(this, new StaffChatCmd("s", "sc", "staffchat"));
 			getProxy().getPluginManager().registerCommand(this, new ReplyCmd("r"));
 			getProxy().getPluginManager().registerCommand(this, new ReplyCmd("reply"));
 			getProxy().getPluginManager().registerCommand(this, new AlertCmd("alert"));

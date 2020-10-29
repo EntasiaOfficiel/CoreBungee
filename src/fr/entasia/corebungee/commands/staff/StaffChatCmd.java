@@ -11,8 +11,8 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class StaffChatCmd extends Command {
 
-	public StaffChatCmd(String name) {
-		super(name);
+	public StaffChatCmd(String... names) {
+		super(names[0], null, names);
 	}
 
 	@Override
