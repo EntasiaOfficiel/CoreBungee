@@ -10,7 +10,6 @@ public class SocketSpecials {
 
 	public static void init() throws Throwable {
 
-
 		SocketClient.addListener(new SocketEvent("vanish") {
 			@Override
 			public void onEvent(String[] data) {
@@ -34,6 +33,5 @@ public class SocketSpecials {
 				if(bp.isOnline())bp.p.sendMessage(ChatComponent.create("§aTon compte à été lié avec succès ! :D"));
 			}
 		});
-
 	}
 }

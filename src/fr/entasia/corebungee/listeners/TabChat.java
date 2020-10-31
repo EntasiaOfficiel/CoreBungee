@@ -89,10 +89,6 @@ public class TabChat implements Listener {
 				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
 					if(p.getDisplayName().toLowerCase().startsWith(a[1]))e.getSuggestions().add(p.getDisplayName());
 				}
-			}else{
-				for(ProxiedPlayer p : Main.main.getProxy().getPlayers()) {
-					e.getSuggestions().add(p.getDisplayName());
-				}
 			}
 		}
 	}

@@ -26,9 +26,8 @@ public class Base implements Listener {
 	public void serverPing(ProxyPingEvent e){
 		if(Main.antibotModule&&AntibotAPI.isActive())return;
 		ServerPing serverPing = e.getResponse();
-		String line1 = Main.configuration.getString("motd1").replace("&","§");
-		String line2 = Main.configuration.getString("motd2").replace("&","§");
-		serverPing.setDescriptionComponent(new TextComponent(line1 +"\n"+line2));
+		String line1 = Main.config.getString("motd1").replace("&","§");
+		serverPing.setDescriptionComponent(new TextComponent(line1+"\n"+Main.motdLine2));
 
 		ServerPing.PlayerInfo[] sample = new ServerPing.PlayerInfo[Main.main.getProxy().getOnlineCount()];
 		int i=0;

@@ -36,9 +36,9 @@ public class GLockCmd extends Command {
 					Main.lockdown = null;
 					sender.sendMessage(ChatComponent.create("§6§lGlobal§6 Lockdown §8» §cDésactivé !"));
 				}
-				Main.configuration.set("lockdown", Main.lockdown);
+				Main.config.set("lockdown", Main.lockdown);
 				try{
-					Main.provider.save(Main.configuration, Main.configFile);
+					Main.provider.save(Main.config, Main.configFile);
 				}catch(IOException e){
 					e.printStackTrace();
 				}

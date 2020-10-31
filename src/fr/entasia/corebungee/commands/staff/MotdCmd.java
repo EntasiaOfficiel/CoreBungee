@@ -18,15 +18,10 @@ public class MotdCmd extends Command {
             ProxiedPlayer p = (ProxiedPlayer) commandSender;
             if(p.hasPermission("entasia.motd")) {
                 if(args.length >= 1){
-                    StringBuilder motdBuilder = new StringBuilder();
-                    for(String s : args){
-                        motdBuilder.append(s).append(" ");
-                    }
-                    String motd = motdBuilder.toString();
-                    Main.updateMotd(motd.replace("&","§"));
-
+                    Main.motdLine2 = String.join(" ", args).replace("&","§");
+                    p.sendMessage(ChatComponent.create("§aMOTD changé avec succès !"));
                 }else{
-                    p.sendMessage(new ChatComponent("§cSyntaxe : /setmotd <motd>").create());
+                    p.sendMessage(ChatComponent.create("§cSyntaxe : /setmotd <motd>"));
                 }
             }
         }

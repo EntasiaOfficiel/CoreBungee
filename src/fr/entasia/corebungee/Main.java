@@ -41,13 +41,12 @@ public class Main extends Plugin{
 	public static SQLConnection sql;
 
 	public static ServerInfo hubServer;
-	public static ServerInfo loginServer;
 
-	public static Configuration configuration;
+	public static Configuration config;
+	public static ConfigurationProvider provider;
 	public static File configFile;
 
 	public static LuckPerms lpAPI;
-	public static ConfigurationProvider provider;
 
 	public static Map<UUID, String> msgs = new HashMap<>();
 	public static Map<String, ProxiedPlayer> vanishs = new HashMap<>();
@@ -55,6 +54,7 @@ public class Main extends Plugin{
 	public static List<UUID> staffchat = new ArrayList<>();
 
 	public static boolean loginModule, antibotModule;
+	public static String motdLine2;
 
 
 	@Override
@@ -99,7 +99,6 @@ public class Main extends Plugin{
 			getProxy().getPluginManager().registerCommand(this, new MaxPlayersCmd("setmaxplayers"));
 
 
-
 			getProxy().getPluginManager().registerListener(this, new Base());
 			getProxy().getPluginManager().registerListener(this, new TabChat());
 
@@ -114,23 +113,24 @@ public class Main extends Plugin{
 				Files.copy(in, configFile.toPath());
 			}
 			provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
-			configuration = provider.load(configFile);
+			config = provider.load(configFile);
 
+			motdLine2 = config.getString("motd2", "");
 
-			dev = configuration.getBoolean("dev", false);
+			dev = config.getBoolean("dev", false);
 
-			lockdown = configuration.getString("lockdown");
+			lockdown = config.getString("lockdown");
 			if (lockdown.equals("")) lockdown = null;
 
 
 			// SQL
-			if(!dev){
-				sql = new SQLConnection("corebungee", "playerdata");
-				ResultSet rs = sql.connection.prepareStatement("SELECT * from global.vanishs").executeQuery();
-				while(rs.next()){
-					vanishs.put(rs.getString("name"), null);
-				}
+			sql = new SQLConnection(dev).mariadb("corebungee", "playerdata");
+			ResultSet rs = sql.connection.prepareStatement("SELECT * from global.vanishs").executeQuery();
+			while(rs.next()){
+				vanishs.put(rs.getString("name"), null);
+			}
 
+			if(!dev) {
 				SocketSpecials.init();
 			}
 //			SQLUpdate.ps = sql.connection.prepareStatement("SELECT * from global.safelist");
@@ -143,13 +143,6 @@ public class Main extends Plugin{
 			ProxyServer.getInstance().stop();
 		}
 	}
-
-	public static void updateMotd(String motd){
-		String line1 = configuration.getString("motd1").replace("&","§");
-		configuration.set("motd2", motd.replace("§","&"));
-	}
-
-
 
 	public static String getSuffix(ProxiedPlayer player) {
 		User user = lpAPI.getUserManager().getUser(player.getUniqueId());
