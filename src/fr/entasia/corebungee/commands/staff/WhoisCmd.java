@@ -38,7 +38,7 @@ public class WhoisCmd extends Command {
 					comp = new ChatComponent("§bServeur actuel : §a" + target.getServer().getInfo().getName());
 					comp.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/server " + target.getServer().getInfo().getName()));
 					comp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponent.create("§7Clique pour aller sur ce serveur !")));
-					target.sendMessage(comp.create());
+					sender.sendMessage(comp.create());
 					sender.sendMessage(ChatComponent.create("§bGrade : §a" + Main.getSuffix(target)));
 				}
 			}else sender.sendMessage(ChatComponent.create("§cSyntaxe : §c/forcekick <joueur>"));
