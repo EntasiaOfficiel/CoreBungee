@@ -12,8 +12,8 @@ public class DiscordCmd extends Command {
 	}
 
 	public void execute(CommandSender sender, String[] args) {
-		ChatComponent cc = new ChatComponent("§6Notre Discord :§d https://discord.gg/7U5E2yQ");
-		cc.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/7U5E2yQ"));
+		ChatComponent cc = new ChatComponent("§6Notre Discord :§d https://discord.gg/sYRPk3dtxg");
+		cc.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/sYRPk3dtxg"));
 		sender.sendMessage(cc.create());
 	}
 }
